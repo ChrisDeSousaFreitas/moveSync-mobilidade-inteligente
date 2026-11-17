@@ -105,4 +105,12 @@ class MoveSyncApiApplicationTests {
     .contentType(MediaType.APPLICATION_JSON).content(invalida))
     .andExpect(status().isBadRequest());
  }
+
+ @Test
+ void statusDaApiEstaDisponivelSemAutenticacao() throws Exception {
+  mvc.perform(get("/api/status"))
+    .andExpect(status().isOk())
+    .andExpect(jsonPath("$.aplicacao").value("Move Sync"))
+    .andExpect(jsonPath("$.estado").value("operacional"));
+ }
 }
