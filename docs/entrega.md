@@ -2,7 +2,8 @@
 
 ## Antes da entrega
 
-- [ ] Executar os testes da API: `cd backend && mvn verify`.
+- [ ] Conferir na aba Actions do GitHub se o workflow `Validacao do Move Sync` concluiu sem falhas.
+- [ ] Executar localmente os testes da API: `cd backend && mvn verify`.
 - [ ] Instalar dependências e validar o mobile: `cd mobile && npm install && npm run typecheck && npm run lint`.
 - [ ] Configurar a URL pública da API no build mobile.
 - [ ] Configurar a chave do Google Maps no ambiente de build.
