@@ -3,6 +3,7 @@ import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, Pressable } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { theme } from "./src/theme";
 
 type RootStackParamList = {
@@ -32,6 +33,23 @@ function Central({navigation}:any) {
     <Text style={styles.foot}>Dados desta tela são simulados. Nenhum sensor real está conectado nesta versão.</Text>
   </ScreenShell>;
 }
+function MapScreen() {
+  const crossings = [
+    { id: "1", title: "Praça Mauá", latitude: -23.9352, longitude: -46.3331, level: "Moderado" },
+    { id: "2", title: "Avenida Ana Costa", latitude: -23.9634, longitude: -46.3336, level: "Fluido" },
+    { id: "3", title: "Avenida Conselheiro Nébias", latitude: -23.9514, longitude: -46.3298, level: "Intenso" }
+  ];
+  return <ScreenShell title="Mapa urbano" subtitle="Santos • mapa real com pontos ilustrativos">
+    <View style={styles.mapFrame}>
+      <MapView style={StyleSheet.absoluteFillObject}
+        initialRegion={{latitude:-23.9535,longitude:-46.3336,latitudeDelta:0.055,longitudeDelta:0.055}}
+        showsCompass showsScale>
+        {crossings.map(point=><Marker key={point.id} coordinate={{latitude:point.latitude,longitude:point.longitude}} title={point.title} description={`Fluxo ${point.level} • dado demonstrativo`}/>)}
+      </MapView>
+    </View>
+    <Text style={styles.foot}>O mapa utiliza cartografia real. Os pontos e indicadores são ilustrativos e não representam sensores conectados.</Text>
+  </ScreenShell>;
+}
 function Generic({route}:any) {
   const copy:any={
     Mapa:["Mapa urbano","Visualização geográfica dos pontos de mobilidade."],
@@ -47,7 +65,7 @@ export default function App() {
   return <NavigationContainer theme={{...DarkTheme,colors:{...DarkTheme.colors,background:theme.colors.background,card:theme.colors.surface,text:theme.colors.text,border:theme.colors.border,primary:theme.colors.primary}}}>
     <StatusBar style="light"/><Stack.Navigator initialRouteName="Central" screenOptions={{headerStyle:{backgroundColor:theme.colors.background},headerTintColor:theme.colors.text,headerTitleStyle:{fontWeight:"700"}}}>
       <Stack.Screen name="Central" component={Central} options={{title:"SYNTRA"}}/>
-      <Stack.Screen name="Mapa" component={Generic}/><Stack.Screen name="Cruzamentos" component={Generic}/>
+      <Stack.Screen name="Mapa" component={MapScreen}/><Stack.Screen name="Cruzamentos" component={Generic}/>
       <Stack.Screen name="Analises" component={Generic}/><Stack.Screen name="Ocorrencias" component={Generic}/>
       <Stack.Screen name="Perfil" component={Generic}/>
     </Stack.Navigator>
@@ -63,6 +81,7 @@ const styles=StyleSheet.create({
  metrics:{flexDirection:"row",gap:12},metric:{flex:1,backgroundColor:theme.colors.surface,padding:15,borderRadius:16,borderWidth:1,borderColor:theme.colors.border},
  metricLabel:{color:theme.colors.muted,fontSize:9,fontWeight:"700",letterSpacing:1},metricValue:{color:theme.colors.text,fontSize:27,fontWeight:"800",marginVertical:8},muted:{color:theme.colors.muted,fontSize:11,lineHeight:17},
  panel:{backgroundColor:theme.colors.surface,padding:18,borderRadius:18,borderWidth:1,borderColor:theme.colors.border,marginTop:14},
+ mapFrame:{height:420,borderRadius:18,overflow:"hidden",borderWidth:1,borderColor:theme.colors.border},
  panelTitle:{color:theme.colors.primary,fontSize:10,fontWeight:"800",letterSpacing:1.5},bigNumber:{color:theme.colors.text,fontSize:46,fontWeight:"800",marginVertical:8},unit:{color:theme.colors.muted,fontSize:16},
  progress:{height:6,backgroundColor:theme.colors.surfaceAlt,borderRadius:4,marginTop:16,overflow:"hidden"},progressFill:{height:6,width:"82%",backgroundColor:theme.colors.primary,borderRadius:4},
  section:{color:theme.colors.muted,fontSize:10,fontWeight:"800",letterSpacing:1.5,marginTop:26,marginBottom:10},
