@@ -94,4 +94,15 @@ class MoveSyncApiApplicationTests {
     .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
   return mapper.readTree(resposta).get("token").asText();
  }
+
+ @Test
+ void rejeitaStatusDeOcorrenciaForaDosValoresPermitidos() throws Exception {
+  String token=criarToken("status-"+UUID.randomUUID()+"@movesync.dev");
+  String invalida="""
+   {"titulo":"Sinal quebrado","descricao":"Semáforo não está funcionando.","categoria":"SINALIZACAO","status":"FINALIZADA"}
+   """;
+  mvc.perform(post("/api/ocorrencias").header("Authorization","Bearer "+token)
+    .contentType(MediaType.APPLICATION_JSON).content(invalida))
+    .andExpect(status().isBadRequest());
+ }
 }
