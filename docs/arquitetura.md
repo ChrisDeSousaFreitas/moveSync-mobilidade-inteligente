@@ -11,7 +11,7 @@ Aplicativo móvel → API REST → camada de serviços → repositórios JPA →
 O cadastro armazena senhas com BCrypt. O login valida as credenciais e emite JWT com expiração. As rotas de ocorrências exigem autenticação e filtram os registros pelo usuário autenticado. O cliente encerra a sessão descartando o token; a API utiliza sessões stateless.
 
 ## Persistência
-O perfil local utiliza H2 em memória. PostgreSQL pode ser configurado por variáveis de ambiente para execução persistente.
+O perfil local utiliza H2 em arquivo (`backend/data/`), preservando dados entre reinicializações. PostgreSQL pode ser configurado por variáveis de ambiente ou pelo Docker Compose para execução persistente.
 
 ## Modo de demonstração
 O modo simulado é identificado na interface e utiliza dados fictícios. Ele não representa telemetria real nem integração ativa com controladores semafóricos.
