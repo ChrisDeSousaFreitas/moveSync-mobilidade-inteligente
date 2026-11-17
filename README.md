@@ -66,4 +66,4 @@ Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. E
 O mapa utiliza cartografia real, mas os marcadores e indicadores de fluxo atualmente exibidos são ilustrativos. Não há conexão com sensores, câmeras ou controladores semafóricos reais nesta versão.
 
 ## Estado do projeto
-Em desenvolvimento. A integração das rotas à interface mobile, testes de execução e distribuição de instalação serão concluídos nas próximas etapas.
+Em desenvolvimento. A interface já possui autenticação integrada, armazenamento seguro da sessão e CRUD de ocorrências conectado à API. Os testes automatizados foram adicionados, mas ainda precisam ser executados em ambiente Java/Maven. A distribuição de instalação e a configuração de serviços externos permanecem pendentes.
