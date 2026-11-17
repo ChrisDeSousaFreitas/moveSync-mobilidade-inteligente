@@ -1,0 +1,10 @@
+Nome do grupo: PREENCHER
+Integrantes:
+- PREENCHER NOME COMPLETO E RM
+- PREENCHER NOME COMPLETO E RM
+
+Projeto: Move Sync — Mobilidade Urbana Inteligente
+Repositório: https://github.com/ChrisDeSousaFreitas/moveSync-mobilidade-inteligente
+Vídeo de demonstração (YouTube público ou não listado): PREENCHER LINK
+
+Aplicativo distribuído pelo Firebase App Distribution: PREENCHER LINK/CONFIRMAÇÃO
