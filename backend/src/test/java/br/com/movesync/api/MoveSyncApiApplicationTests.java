@@ -26,8 +26,8 @@ class MoveSyncApiApplicationTests {
   String cadastro="""
    {"nome":"Pessoa Teste","email":"%s","senha":"SenhaForte123"}
    """.formatted(email);
-  String resposta=mvc.perform(post("/api/auth/cadastro").contentType(MediaType.APPLICATION_JSON).content(cadastro))
-   .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+  mvc.perform(post("/api/auth/cadastro").contentType(MediaType.APPLICATION_JSON).content(cadastro))
+   .andExpect(status().isCreated());
   String credenciais="""
    {"email":"%s","senha":"SenhaForte123"}
    """.formatted(email);
