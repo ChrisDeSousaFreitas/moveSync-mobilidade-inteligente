@@ -1,11 +1,11 @@
 spring:
   application:
-    name: syntra-api
+    name: move-sync-api
   datasource:
-    url: jdbc:h2:mem:syntra;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: ${DATABASE_URL:jdbc:h2:mem:movesync;MODE=PostgreSQL;DB_CLOSE_DELAY=-1}
+    driver-class-name: ${DATABASE_DRIVER:org.h2.Driver}
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD:}
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,4 +17,8 @@ spring:
     console:
       enabled: true
 server:
-  port: 8080
+  port: ${PORT:8080}
+app:
+  jwt:
+    secret: ${JWT_SECRET:MoveSync-Dev-Secret-Key-2026-Use-At-Least-32-Bytes}
+    expiracao-ms: 86400000
