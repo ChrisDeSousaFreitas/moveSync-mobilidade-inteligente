@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
  @Bean PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
  @Bean UserDetailsService userDetailsService(UsuarioRepository repo){return email->repo.findByEmail(email.toLowerCase()).orElseThrow(()->new org.springframework.security.core.userdetails.UsernameNotFoundException("Usuário não encontrado."));}
- @Bean DaoAuthenticationProvider authenticationProvider(UserDetailsService users,PasswordEncoder encoder){var provider=new DaoAuthenticationProvider();provider.setUserDetailsService(users);provider.setPasswordEncoder(encoder);return provider;}
+ @Bean DaoAuthenticationProvider authenticationProvider(UserDetailsService users,PasswordEncoder encoder){var provider=new DaoAuthenticationProvider(users);provider.setPasswordEncoder(encoder);return provider;}
  @Bean AuthenticationManager authenticationManager(DaoAuthenticationProvider provider){return new ProviderManager(provider);}
  @Bean SecurityFilterChain filterChain(HttpSecurity http,JwtAuthFilter jwt,DaoAuthenticationProvider provider)throws Exception{
   return http.csrf(csrf->csrf.disable()).cors(cors->{}).sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(provider)
