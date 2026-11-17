@@ -24,9 +24,16 @@ O comando `eas init` vincula o aplicativo à conta Expo e adiciona um identifica
 5. Em App Distribution, cadastre o e-mail do professor como tester ou inclua-o em um grupo de testers.
 6. Não coloque arquivos de chave de serviço, tokens ou credenciais no GitHub.
 
-## 3. Gerar o APK
+## 3. Configurar variáveis e gerar o APK
 
-Antes de compilar, configure `EXPO_PUBLIC_API_URL` apontando para uma API acessível pelo celular do professor. Um endereço `localhost` no celular aponta para o próprio celular, não para o computador ou servidor.
+Antes de compilar, publique a API em um endereço HTTPS acessível pelo celular do professor. Um endereço `localhost` no celular aponta para o próprio celular, não para o computador ou servidor.
+
+No painel do projeto Expo/EAS, configure as variáveis de ambiente usadas pelo build:
+
+- `EXPO_PUBLIC_API_URL`: endereço público da API, incluindo `/api`.
+- `EXPO_PUBLIC_MAPS_API_KEY`: chave Google Maps habilitada para Android Maps SDK. Restrinja a chave ao pacote `br.com.movesync.mobilidade` e à assinatura do aplicativo; não use uma chave irrestrita.
+
+A URL e a chave precisam estar disponíveis no ambiente de build escolhido (por exemplo, `preview`).
 
 Para compilar:
 
