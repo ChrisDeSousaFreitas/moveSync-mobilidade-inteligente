@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class StatusController {
   @GetMapping
   public Map<String, String> status() {
-    return Map.of("aplicacao", "Move Sync", "estado", "operacional", "ambiente", "desenvolvimento");
+    return Map.of("aplicacao", "Move Sync", "estado", "operacional");
   }
 }
