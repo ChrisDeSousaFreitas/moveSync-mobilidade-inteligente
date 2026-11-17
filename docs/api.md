@@ -57,4 +57,4 @@ Content-Type: application/json
 - Cada usuário só pode consultar, alterar ou excluir as próprias ocorrências.
 - Status aceitos: `ABERTA`, `EM_ANALISE` e `RESOLVIDA`.
 - O logout é stateless: o aplicativo descarta o token localmente. Um token copiado continua válido até expirar.
-- O banco H2 padrão é em memória. Configure PostgreSQL para persistência entre reinicializações.
+- O banco H2 padrão é armazenado em arquivo em `backend/data/`, preservando dados entre reinicializações locais. Configure PostgreSQL para ambientes compartilhados ou publicados.
