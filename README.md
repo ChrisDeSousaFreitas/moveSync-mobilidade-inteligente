@@ -76,6 +76,8 @@ Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. E
 - `docs/distribuicao.md`: EAS Build e Firebase App Distribution.
 - `docs/entrega.md`: checklist da Global Solution.
 
+Consulte `docs/execucao-local.md` para instruções detalhadas de execução, testes e solução de problemas.
+
 ## Demonstração e integridade dos dados
 O mapa utiliza cartografia real, mas os marcadores e indicadores de fluxo atualmente exibidos são ilustrativos. Não há conexão com sensores, câmeras ou controladores semafóricos reais nesta versão.
 
