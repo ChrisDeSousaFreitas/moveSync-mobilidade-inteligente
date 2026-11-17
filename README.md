@@ -59,6 +59,13 @@ npm install
 npx expo start
 ```
 
+Verificações locais do aplicativo:
+
+```bash
+npm run typecheck
+npm run lint
+```
+
 Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. Em emulador Android, `10.0.2.2` aponta para o computador; no Expo Go em celular físico, use o IP local do computador. Para builds nativos com Google Maps, configure `EXPO_PUBLIC_MAPS_API_KEY` no ambiente antes de gerar o aplicativo.
 
 
