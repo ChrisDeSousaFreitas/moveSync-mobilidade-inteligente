@@ -9,7 +9,7 @@
 - [ ] Gerar APK de prévia com EAS.
 - [ ] Distribuir o APK pelo Firebase App Distribution.
 - [ ] Adicionar o professor como tester no Firebase.
-- [ ] Adicionar o professor ao repositório GitHub com permissão de leitura.
+- [ ] Adicionar o professor ao repositório GitHub com permissão de leitura (Settings → Collaborators → Add people → selecionar Read).
 - [ ] Gravar vídeo de demonstração com até 5 minutos e publicar no YouTube como público ou não listado.
 - [ ] Preencher o arquivo `entrega.txt` com nome do grupo, integrantes, link do vídeo e repositório.
 - [ ] Atualizar a tela Sobre com o hash de referência do commit final.
