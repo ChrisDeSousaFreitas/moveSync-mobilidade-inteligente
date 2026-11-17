@@ -1,0 +1,36 @@
+name: Validacao do Move Sync
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  backend:
+    name: API Java
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Compilar e executar testes
+        working-directory: backend
+        run: mvn --batch-mode verify
+  mobile:
+    name: Aplicativo React Native
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: Instalar dependências
+        working-directory: mobile
+        run: npm install
+      - name: Verificar TypeScript
+        working-directory: mobile
+        run: npm run typecheck
