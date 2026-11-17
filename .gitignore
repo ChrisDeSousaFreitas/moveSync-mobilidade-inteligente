@@ -1,5 +1,8 @@
-# Java / Maven
+ # Java / Maven
 backend/target/
+backend/data/
+*.mv.db
+*.trace.db
 *.class
 *.log
 
