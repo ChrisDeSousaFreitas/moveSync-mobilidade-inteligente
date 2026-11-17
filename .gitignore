@@ -1,0 +1,21 @@
+# Java / Maven
+backend/target/
+*.class
+*.log
+
+# Node / Expo
+node_modules/
+.expo/
+dist/
+web-build/
+
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+
+# IDE e sistema
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "SYNTRA",
+    "slug": "syntra-mobilidade",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#07111D"
+    },
+    "android": {
+      "package": "br.com.syntra.mobilidade"
+    },
+    "ios": {
+      "bundleIdentifier": "br.com.syntra.mobilidade"
+    }
+  }
+}
