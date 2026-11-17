@@ -60,4 +60,38 @@ class MoveSyncApiApplicationTests {
   mvc.perform(get("/api/ocorrencias").header("Authorization","Bearer "+token))
    .andExpect(status().isOk()).andExpect(content().json("[]"));
  }
+
+ @Test
+ void usuarioNaoAcessaOcorrenciaDeOutraConta() throws Exception {
+  String tokenDono=criarToken("dono-"+UUID.randomUUID()+"@movesync.dev");
+  String tokenOutro=criarToken("outro-"+UUID.randomUUID()+"@movesync.dev");
+  String nova="""
+   {"titulo":"Semáforo apagado","descricao":"Sinalização desligada no cruzamento.","categoria":"SINALIZACAO","status":"ABERTA"}
+   """;
+  String criada=mvc.perform(post("/api/ocorrencias").header("Authorization","Bearer "+tokenDono)
+    .contentType(MediaType.APPLICATION_JSON).content(nova))
+    .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+  long id=mapper.readTree(criada).get("id").asLong();
+  mvc.perform(get("/api/ocorrencias/"+id).header("Authorization","Bearer "+tokenOutro))
+    .andExpect(status().isNotFound());
+ }
+
+ @Test
+ void endpointsPrivadosExigemAutenticacao() throws Exception {
+  mvc.perform(get("/api/ocorrencias")).andExpect(status().isUnauthorized());
+ }
+
+ private String criarToken(String email) throws Exception {
+  String cadastro="""
+   {"nome":"Pessoa Teste","email":"%s","senha":"SenhaForte123"}
+   """.formatted(email);
+  mvc.perform(post("/api/auth/cadastro").contentType(MediaType.APPLICATION_JSON).content(cadastro))
+    .andExpect(status().isCreated());
+  String login="""
+   {"email":"%s","senha":"SenhaForte123"}
+   """.formatted(email);
+  String resposta=mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(login))
+    .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+  return mapper.readTree(resposta).get("token").asText();
+ }
 }
