@@ -7,7 +7,7 @@ import MapView, { Marker } from "react-native-maps";
 import { theme } from "./src/theme";
 import { authApi, ocorrenciasApi, limparSessao, recuperarSessao, salvarSessao, Ocorrencia, OcorrenciaInput, Sessao, Usuario } from "./src/services/api";
 
-type Rotas = { Central:undefined; Mapa:undefined; Cruzamentos:undefined; Analises:undefined; Ocorrencias:undefined; Perfil:undefined; Sobre:undefined };
+type Rotas = { Acesso:undefined; Central:undefined; Mapa:undefined; Cruzamentos:undefined; Analises:undefined; Ocorrencias:undefined; Perfil:undefined; Sobre:undefined };
 const Stack=createNativeStackNavigator<Rotas>();
 const AuthContext=createContext<{usuario:Usuario|null;encerrar:()=>Promise<void>}>({usuario:null,encerrar:async()=>{}});
 const useAuth=()=>useContext(AuthContext);
@@ -72,7 +72,7 @@ export default function App(){
  const navTheme={...DarkTheme,colors:{...DarkTheme.colors,background:theme.colors.background,card:theme.colors.surface,text:theme.colors.text,border:theme.colors.border,primary:theme.colors.primary}};
  if(iniciando)return <View style={styles.loading}><ActivityIndicator color={theme.colors.primary} size="large"/><Text style={styles.muted}>Preparando o Move Sync...</Text></View>;
  return <AuthContext.Provider value={{usuario:sessao?.usuario||null,encerrar}}><NavigationContainer theme={navTheme}><StatusBar style="light"/><Stack.Navigator screenOptions={{headerStyle:{backgroundColor:theme.colors.background},headerTintColor:theme.colors.text,headerTitleStyle:{fontWeight:"700"},contentStyle:{backgroundColor:theme.colors.background}}}>
- {sessao===null?<Stack.Screen name={"Acesso" as any} options={{headerShown:false}}>{()=><AuthScreen onAuth={s=>setSessao({token:s.token,usuario:{id:s.id,nome:s.nome,email:s.email}})}/>}</Stack.Screen>:<>
+ {sessao===null?<Stack.Screen name="Acesso" options={{headerShown:false}}>{()=><AuthScreen onAuth={s=>setSessao({token:s.token,usuario:{id:s.id,nome:s.nome,email:s.email}})}/>}</Stack.Screen>:<>
  <Stack.Screen name="Central" component={Central} options={{title:"Move Sync"}}/><Stack.Screen name="Mapa" component={MapScreen}/><Stack.Screen name="Cruzamentos" component={Cruzamentos}/><Stack.Screen name="Analises" component={Analises}/><Stack.Screen name="Ocorrencias" component={Ocorrencias}/><Stack.Screen name="Perfil" component={Perfil}/><Stack.Screen name="Sobre" component={Sobre}/>
  </>}
  </Stack.Navigator></NavigationContainer></AuthContext.Provider>;
