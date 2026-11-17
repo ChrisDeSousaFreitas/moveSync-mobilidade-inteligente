@@ -28,7 +28,12 @@ class MoveSyncApiApplicationTests {
    """.formatted(email);
   String resposta=mvc.perform(post("/api/auth/cadastro").contentType(MediaType.APPLICATION_JSON).content(cadastro))
    .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-  JsonNode sessao=mapper.readTree(resposta);
+  String credenciais="""
+   {"email":"%s","senha":"SenhaForte123"}
+   """.formatted(email);
+  String login=mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(credenciais))
+   .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+  JsonNode sessao=mapper.readTree(login);
   String token=sessao.get("token").asText();
 
   mvc.perform(get("/api/ocorrencias").header("Authorization","Bearer "+token))
