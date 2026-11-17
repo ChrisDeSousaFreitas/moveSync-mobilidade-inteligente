@@ -1,6 +1,5 @@
 Nome do grupo: PREENCHER
-Integrantes:
-- PREENCHER NOME COMPLETO E RM
+Integrantes (adicione uma linha por pessoa):
 - PREENCHER NOME COMPLETO E RM
 
 Projeto: Move Sync — Mobilidade Urbana Inteligente
