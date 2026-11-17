@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function ScreenShell({ title, subtitle, children }: React.PropsWithChildren<{title:string;subtitle:string}>) {
   return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.content}>
-    <Text style={styles.eyebrow}>SYNTRA / MOBILIDADE URBANA</Text>
+    <Text style={styles.eyebrow}>Move Sync / MOBILIDADE URBANA</Text>
     <Text style={styles.heading}>{title}</Text><Text style={styles.subtitle}>{subtitle}</Text>
     {children}
   </ScrollView></SafeAreaView>;
@@ -58,13 +58,13 @@ function Generic({route}:any) {
     Ocorrencias:["Ocorrências","Registre e acompanhe situações que afetam o trânsito."],
     Perfil:["Meu perfil","Preferências, conta e informações do aplicativo."]
   };
-  const [title,subtitle]=copy[route.name] ?? ["SYNTRA","Mobilidade inteligente"];
-  return <ScreenShell title={title} subtitle={subtitle}><View style={styles.panel}><Text style={styles.panelTitle}>MÓDULO EM CONSTRUÇÃO</Text><Text style={styles.muted}>Esta área será conectada à API do SYNTRA nas próximas etapas.</Text></View></ScreenShell>;
+  const [title,subtitle]=copy[route.name] ?? ["Move Sync","Mobilidade inteligente"];
+  return <ScreenShell title={title} subtitle={subtitle}><View style={styles.panel}><Text style={styles.panelTitle}>MÓDULO EM CONSTRUÇÃO</Text><Text style={styles.muted}>Esta área será conectada à API do Move Sync nas próximas etapas.</Text></View></ScreenShell>;
 }
 export default function App() {
   return <NavigationContainer theme={{...DarkTheme,colors:{...DarkTheme.colors,background:theme.colors.background,card:theme.colors.surface,text:theme.colors.text,border:theme.colors.border,primary:theme.colors.primary}}}>
     <StatusBar style="light"/><Stack.Navigator initialRouteName="Central" screenOptions={{headerStyle:{backgroundColor:theme.colors.background},headerTintColor:theme.colors.text,headerTitleStyle:{fontWeight:"700"}}}>
-      <Stack.Screen name="Central" component={Central} options={{title:"SYNTRA"}}/>
+      <Stack.Screen name="Central" component={Central} options={{title:"Move Sync"}}/>
       <Stack.Screen name="Mapa" component={MapScreen}/><Stack.Screen name="Cruzamentos" component={Generic}/>
       <Stack.Screen name="Analises" component={Generic}/><Stack.Screen name="Ocorrencias" component={Generic}/>
       <Stack.Screen name="Perfil" component={Generic}/>
