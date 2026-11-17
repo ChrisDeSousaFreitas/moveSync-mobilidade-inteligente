@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { theme } from "./src/theme";
-import { authApi, ocorrenciasApi, limparSessao, recuperarSessao, salvarSessao, Ocorrencia, OcorrenciaInput, Sessao, Usuario } from "./src/services/api";
+import { authApi, ocorrenciasApi, limparSessao, recuperarSessao, salvarSessao, Ocorrencia, OcorrenciaInput, Sessao, Usuario, statusApi } from "./src/services/api";
 
 type Rotas = { Acesso:undefined; Central:undefined; Mapa:undefined; Cruzamentos:undefined; Analises:undefined; Ocorrencias:undefined; Perfil:undefined; Sobre:undefined };
 const Stack=createNativeStackNavigator<Rotas>();
@@ -35,9 +35,11 @@ function AuthScreen({onAuth}:{onAuth:(s:Sessao)=>void}){
  </Shell>;
 }
 function Central({navigation}:any){
+ const [apiEstado,setApiEstado]=useState<"verificando"|"online"|"offline">("verificando");
+ useEffect(()=>{statusApi.consultar().then(()=>setApiEstado("online")).catch(()=>setApiEstado("offline"));},[]);
  const links:[string,keyof Rotas][]=[["Mapa urbano","Mapa"],["Cruzamentos","Cruzamentos"],["Análises","Analises"],["Ocorrências","Ocorrencias"],["Meu perfil","Perfil"],["Sobre o app","Sobre"]];
  return <Shell title="Sua cidade, em movimento." subtitle="Visão geral da mobilidade • Santos/SP">
-  <View style={styles.status}><View style={styles.dot}/><Text style={styles.statusText}>PAINEL DE DEMONSTRAÇÃO</Text></View>
+  <View style={styles.status}><View style={[styles.dot,apiEstado==="offline"&&{backgroundColor:theme.colors.danger},apiEstado==="verificando"&&{backgroundColor:theme.colors.warning}]}/><Text style={styles.statusText}>{apiEstado==="online"?"API CONECTADA":apiEstado==="offline"?"API INDISPONÍVEL":"VERIFICANDO API"}</Text></View><Text style={styles.foot}>PAINEL DE DEMONSTRAÇÃO · INDICADORES SIMULADOS</Text>
   <View style={styles.metrics}><View style={styles.metric}><Text style={styles.metricLabel}>FLUXO MONITORADO</Text><Text style={styles.metricValue}>1.284</Text><Text style={styles.muted}>veículos / hora*</Text></View><View style={styles.metric}><Text style={styles.metricLabel}>CRUZAMENTOS</Text><Text style={styles.metricValue}>03</Text><Text style={styles.muted}>pontos ilustrativos</Text></View></View>
   <View style={styles.panel}><Text style={styles.panelTitle}>ÍNDICE DE FLUIDEZ SIMULADO</Text><Text style={styles.bigNumber}>82<Text style={styles.unit}>/100</Text></Text><Text style={styles.muted}>Indicador demonstrativo, não representa medição real.</Text><View style={styles.progress}><View style={styles.progressFill}/></View></View>
   <Text style={styles.section}>CENTRAL DE OPERAÇÕES</Text>{links.map(([label,route])=><Pressable key={route} style={styles.link} onPress={()=>navigation.navigate(route)}><Text style={styles.linkText}>{label}</Text><Text style={styles.arrow}>↗</Text></Pressable>)}
