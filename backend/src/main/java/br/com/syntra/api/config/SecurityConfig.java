@@ -21,7 +21,7 @@ public class SecurityConfig {
  @Bean AuthenticationManager authenticationManager(DaoAuthenticationProvider provider){return new ProviderManager(provider);}
  @Bean SecurityFilterChain filterChain(HttpSecurity http,JwtAuthFilter jwt,DaoAuthenticationProvider provider)throws Exception{
   return http.csrf(csrf->csrf.disable()).cors(cors->{}).sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(provider)
-   .authorizeHttpRequests(auth->auth.requestMatchers("/api/auth/**","/api/status","/h2-console/**").permitAll().requestMatchers(HttpMethod.OPTIONS,"/**").permitAll().anyRequest().authenticated())
+   .authorizeHttpRequests(auth->auth.requestMatchers("/api/auth/cadastro","/api/auth/login","/api/status","/h2-console/**").permitAll().requestMatchers(HttpMethod.OPTIONS,"/**").permitAll().anyRequest().authenticated())
    .headers(headers->headers.frameOptions(frame->frame.sameOrigin())).addFilterBefore(jwt,UsernamePasswordAuthenticationFilter.class).build();
  }
 }
