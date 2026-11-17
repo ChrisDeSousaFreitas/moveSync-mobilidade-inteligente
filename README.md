@@ -62,6 +62,13 @@ npx expo start
 Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. Em emulador Android, `10.0.2.2` aponta para o computador; no Expo Go em celular físico, use o IP local do computador. Para builds nativos com Google Maps, configure `EXPO_PUBLIC_MAPS_API_KEY` no ambiente antes de gerar o aplicativo.
 
 
+## Documentação adicional
+- `docs/arquitetura.md`: organização dos módulos e segurança.
+- `docs/api.md`: contratos e exemplos de requisição.
+- `docs/publicacao-api.md`: publicação do backend.
+- `docs/distribuicao.md`: EAS Build e Firebase App Distribution.
+- `docs/entrega.md`: checklist da Global Solution.
+
 ## Demonstração e integridade dos dados
 O mapa utiliza cartografia real, mas os marcadores e indicadores de fluxo atualmente exibidos são ilustrativos. Não há conexão com sensores, câmeras ou controladores semafóricos reais nesta versão.
 
