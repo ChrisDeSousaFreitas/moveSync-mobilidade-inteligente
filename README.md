@@ -82,4 +82,4 @@ Consulte `docs/execucao-local.md` para instruções detalhadas de execução, te
 O mapa utiliza cartografia real, mas os marcadores e indicadores de fluxo atualmente exibidos são ilustrativos. Não há conexão com sensores, câmeras ou controladores semafóricos reais nesta versão.
 
 ## Estado do projeto
-Em desenvolvimento. A interface já possui autenticação integrada, armazenamento seguro da sessão e CRUD de ocorrências conectado à API. Os testes automatizados foram adicionados, mas ainda precisam ser executados em ambiente Java/Maven. A distribuição de instalação e a configuração de serviços externos permanecem pendentes.
+Em desenvolvimento. A interface já possui autenticação integrada, armazenamento seguro da sessão e CRUD de ocorrências conectado à API. O workflow do GitHub Actions executou com sucesso a compilação e os testes da API, além das verificações de TypeScript e ESLint do aplicativo. A validação em dispositivo físico/emulador, a distribuição de instalação e a configuração de serviços externos permanecem pendentes.
