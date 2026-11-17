@@ -21,7 +21,7 @@ Reunir informações de trânsito em uma interface clara, apoiar a leitura de fl
 React Native, Expo, TypeScript, React Navigation, Java 21, Spring Boot, Spring Security, Spring Data JPA, JWT, H2 e PostgreSQL.
 
 ## API
-A API inicia na porta `8080`. No perfil padrão, utiliza H2 em memória para desenvolvimento. Para persistência fora do ciclo de execução, configure PostgreSQL com `DATABASE_URL`, `DATABASE_DRIVER`, `DATABASE_USERNAME` e `DATABASE_PASSWORD`.
+A API inicia na porta `8080`. No perfil padrão, utiliza H2 em arquivo em `backend/data/`, preservando os registros entre reinicializações locais. Para persistência fora do ciclo de execução, configure PostgreSQL com `DATABASE_URL`, `DATABASE_DRIVER`, `DATABASE_USERNAME` e `DATABASE_PASSWORD`.
 
 | Método | Rota | Acesso |
 |---|---|---|
