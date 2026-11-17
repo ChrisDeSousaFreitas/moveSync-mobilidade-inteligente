@@ -32,3 +32,6 @@ jobs:
       - name: Verificar TypeScript
         working-directory: mobile
         run: npm run typecheck
+      - name: Analisar qualidade do código
+        working-directory: mobile
+        run: npm run lint
