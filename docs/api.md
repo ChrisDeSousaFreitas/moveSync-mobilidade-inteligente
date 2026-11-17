@@ -58,3 +58,44 @@ Content-Type: application/json
 - Status aceitos: `ABERTA`, `EM_ANALISE` e `RESOLVIDA`.
 - O logout é stateless: o aplicativo descarta o token localmente. Um token copiado continua válido até expirar.
 - O banco H2 padrão é armazenado em arquivo em `backend/data/`, preservando dados entre reinicializações locais. Configure PostgreSQL para ambientes compartilhados ou publicados.
+
+
+## Consultar ocorrências
+
+```http
+GET /ocorrencias
+Authorization: Bearer <token>
+```
+
+A listagem retorna somente registros do usuário autenticado, ordenados dos mais recentes para os mais antigos. Para consultar um registro específico, use `GET /ocorrencias/{id}`.
+
+## Atualizar uma ocorrência
+
+```http
+PUT /ocorrencias/1
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "titulo": "Congestionamento atualizado",
+  "descricao": "Fluxo lento no sentido Centro.",
+  "categoria": "CONGESTIONAMENTO",
+  "endereco": "Avenida Ana Costa, Santos",
+  "latitude": -23.9634,
+  "longitude": -46.3336,
+  "status": "EM_ANALISE"
+}
+```
+
+## Excluir uma ocorrência
+
+```http
+DELETE /ocorrencias/1
+Authorization: Bearer <token>
+```
+
+A exclusão retorna HTTP 204. IDs pertencentes a outra conta não podem ser consultados, alterados ou excluídos.
+
+## Respostas de erro
+
+Erros de validação retornam HTTP 400; credenciais inválidas ou ausência de autenticação retornam HTTP 401; recursos inexistentes ou pertencentes a outro usuário retornam HTTP 404; e e-mail já cadastrado retorna HTTP 409.
