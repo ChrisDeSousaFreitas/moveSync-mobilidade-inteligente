@@ -50,7 +50,7 @@ Para executar a suíte automatizada:
 mvn test
 ```
 
-Em ambiente publicado, defina uma variável `JWT_SECRET` forte e privada.
+Para subir a API com PostgreSQL local via Docker, copie `.env.example` para `.env` na raiz e execute `docker compose up --build`. Troque os valores de exemplo antes de publicar o serviço. Em ambiente publicado, defina uma variável `JWT_SECRET` forte e privada.
 
 ### Executar o aplicativo
 ```bash
