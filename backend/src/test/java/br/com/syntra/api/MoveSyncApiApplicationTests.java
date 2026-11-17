@@ -19,18 +19,38 @@ class MoveSyncApiApplicationTests {
  @Autowired ObjectMapper mapper;
 
  @Test
- void cadastroAutenticaEPermiteGerenciarOcorrenciasDoUsuario() throws Exception {
+ void cadastroECrudDeOcorrenciasFuncionamComToken() throws Exception {
   String email="teste-"+UUID.randomUUID()+"@movesync.dev";
-  String cadastro=mvc.perform(post("/api/auth/cadastro").contentType(MediaType.APPLICATION_JSON)
-    .content("{\"nome\":\"Pessoa Teste\",\"email\":\""+email+"\",\"senha\":\"SenhaForte123\"}"))
-    .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-  JsonNode sessao=mapper.readTree(cadastro);String token=sessao.get("token").asText();
+  String cadastro="""
+   {"nome":"Pessoa Teste","email":"%s","senha":"SenhaForte123"}
+   """.formatted(email);
+  String resposta=mvc.perform(post("/api/auth/cadastro").contentType(MediaType.APPLICATION_JSON).content(cadastro))
+   .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+  JsonNode sessao=mapper.readTree(resposta);
+  String token=sessao.get("token").asText();
+
   mvc.perform(get("/api/ocorrencias").header("Authorization","Bearer "+token))
-    .andExpect(status().isOk()).andExpect(content().json("[]"));
-  mvc.perform(post("/api/ocorrencias").header("Authorization","Bearer "+token).contentType(MediaType.APPLICATION_JSON)
-    .content("{\"titulo\":\"Colisão na avenida\",\"descricao\":\"Veículos envolvidos na faixa da direita.\",\"categoria\":\"ACIDENTE\",\"status\":\"ABERTA\"}"))
-    .andExpect(status().isCreated()).andExpect(jsonPath("$.titulo").value("Colisão na avenida"));
+   .andExpect(status().isOk()).andExpect(content().json("[]"));
+
+  String nova="""
+   {"titulo":"Colisão na avenida","descricao":"Veículos envolvidos na faixa da direita.","categoria":"ACIDENTE","status":"ABERTA"}
+   """;
+  mvc.perform(post("/api/ocorrencias").header("Authorization","Bearer "+token).contentType(MediaType.APPLICATION_JSON).content(nova))
+   .andExpect(status().isCreated()).andExpect(jsonPath("$.titulo").value("Colisão na avenida"));
+
+  String lista=mvc.perform(get("/api/ocorrencias").header("Authorization","Bearer "+token))
+   .andExpect(status().isOk()).andExpect(jsonPath("$[0].categoria").value("ACIDENTE"))
+   .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+  long id=mapper.readTree(lista).get(0).get("id").asLong();
+
+  String atualizacao="""
+   {"titulo":"Colisão atualizada","descricao":"Faixa da direita liberada.","categoria":"ACIDENTE","status":"EM_ANALISE"}
+   """;
+  mvc.perform(put("/api/ocorrencias/"+id).header("Authorization","Bearer "+token).contentType(MediaType.APPLICATION_JSON).content(atualizacao))
+   .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("EM_ANALISE"));
+  mvc.perform(delete("/api/ocorrencias/"+id).header("Authorization","Bearer "+token))
+   .andExpect(status().isNoContent());
   mvc.perform(get("/api/ocorrencias").header("Authorization","Bearer "+token))
-    .andExpect(status().isOk()).andExpect(jsonPath("$[0].categoria").value("ACIDENTE"));
+   .andExpect(status().isOk()).andExpect(content().json("[]"));
  }
 }
