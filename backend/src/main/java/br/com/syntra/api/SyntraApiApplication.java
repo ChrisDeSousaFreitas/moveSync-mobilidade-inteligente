@@ -1,7 +1,7 @@
-package br.com.syntra.api;
+package br.com.movesync.api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
-public class SyntraApiApplication {
-  public static void main(String[] args) { SpringApplication.run(SyntraApiApplication.class, args); }
+public class MoveSyncApiApplication {
+  public static void main(String[] args) { SpringApplication.run(MoveSyncApiApplication.class, args); }
 }
