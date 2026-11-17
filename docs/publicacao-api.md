@@ -19,6 +19,7 @@ O aplicativo distribuído ao professor precisa acessar uma API por um endereço 
 | `DATABASE_USERNAME` | Usuário do banco |
 | `DATABASE_PASSWORD` | Senha do banco |
 | `JWT_SECRET` | Segredo aleatório forte, com pelo menos 32 bytes |
+| `APP_CORS_ORIGENS` | Origens web permitidas, separadas por vírgula (quando aplicável) |
 
 Não use a senha de exemplo do Docker Compose nem o segredo JWT padrão em ambiente publicado. Nunca envie credenciais ao GitHub.
 
