@@ -1,24 +1,17 @@
-# Arquitetura inicial
+# Arquitetura do Move Sync
 
 ## Visão geral
-
-O projeto é dividido em dois módulos independentes:
-
 - **mobile:** interface React Native/Expo, navegação e comunicação HTTP.
-- **backend:** API REST Java/Spring Boot, regras de negócio e persistência.
+- **backend:** API REST Java/Spring Boot, autenticação JWT, regras de negócio e persistência.
 
-## Fluxo previsto
-
+## Fluxo
 Aplicativo móvel → API REST → camada de serviços → repositórios JPA → banco de dados.
 
+## Segurança
+O cadastro armazena senhas com BCrypt. O login valida as credenciais e emite JWT com expiração. As rotas de ocorrências exigem autenticação e filtram os registros pelo usuário autenticado. O cliente encerra a sessão descartando o token; a API utiliza sessões stateless.
+
+## Persistência
+O perfil local utiliza H2 em memória. PostgreSQL pode ser configurado por variáveis de ambiente para execução persistente.
+
 ## Modo de demonstração
-
-O modo simulado deverá ser identificado na interface e utilizar dados fictícios locais. Ele não deve ser apresentado como telemetria real nem como integração ativa com controladores semafóricos.
-
-## Próximas etapas
-
-1. Implementar autenticação e autorização.
-2. Criar entidade e CRUD de ocorrências.
-3. Integrar mapa real e marcadores de cruzamentos.
-4. Implementar dados de demonstração separados dos dados da API.
-5. Adicionar testes, validações e documentação de execução.
+O modo simulado é identificado na interface e utiliza dados fictícios. Ele não representa telemetria real nem integração ativa com controladores semafóricos.
