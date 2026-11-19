@@ -2,8 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, Alert, Platform, SafeAreaView, ScrollView, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { theme } from "./src/theme";
 import { authApi, ocorrenciasApi, limparSessao, recuperarSessao, salvarSessao, Ocorrencia, OcorrenciaInput, Sessao, Usuario, statusApi } from "./src/services/api";
 
@@ -47,29 +47,8 @@ function Central({navigation}:any){
  </Shell>;
 }
 function MapScreen(){
- const [mapReady,setMapReady]=useState(false);
  const points=[{id:"1",title:"Praça Mauá",latitude:-23.9352,longitude:-46.3331,level:"Moderado"},{id:"2",title:"Avenida Ana Costa",latitude:-23.9634,longitude:-46.3336,level:"Fluido"},{id:"3",title:"Avenida Conselheiro Nébias",latitude:-23.9514,longitude:-46.3298,level:"Intenso"}];
- return <Shell title="Mapa urbano" subtitle="Santos • cartografia real com pontos ilustrativos">
-  <View style={styles.mapFrame}>
-   <MapView
-    provider={Platform.OS==="android"?PROVIDER_GOOGLE:undefined}
-    style={StyleSheet.absoluteFillObject}
-    initialRegion={{latitude:-23.9535,longitude:-46.3336,latitudeDelta:0.055,longitudeDelta:0.055}}
-    onMapReady={()=>setMapReady(true)}
-    loadingEnabled
-    loadingBackgroundColor={theme.colors.surface}
-    loadingIndicatorColor={theme.colors.primary}
-    mapType="standard"
-    showsCompass
-    showsScale
-    toolbarEnabled={false}
-   >
-    {points.map(p=><Marker key={p.id} coordinate={{latitude:p.latitude,longitude:p.longitude}} title={p.title} description={`Fluxo ${p.level} • demonstração`}/>)}
-   </MapView>
-   {!mapReady&&<View style={styles.mapLoading}><ActivityIndicator color={theme.colors.primary}/><Text style={styles.muted}>Carregando cartografia...</Text></View>}
-  </View>
-  <Text style={styles.foot}>O mapa utiliza cartografia real. Marcadores e indicadores são ilustrativos e não representam sensores conectados.</Text>
- </Shell>;
+ return <Shell title="Mapa urbano" subtitle="Santos • cartografia real com pontos ilustrativos"><View style={styles.mapFrame}><MapView style={StyleSheet.absoluteFillObject} initialRegion={{latitude:-23.9535,longitude:-46.3336,latitudeDelta:0.055,longitudeDelta:0.055}} showsCompass showsScale>{points.map(p=><Marker key={p.id} coordinate={{latitude:p.latitude,longitude:p.longitude}} title={p.title} description={`Fluxo ${p.level} • demonstração`}/>)}</MapView></View><Text style={styles.foot}>O mapa utiliza cartografia real. Marcadores e indicadores são ilustrativos e não representam sensores conectados.</Text></Shell>;
 }
 function Cruzamentos(){return <Shell title="Cruzamentos inteligentes" subtitle="Pontos de interesse na malha urbana de Santos"><View style={styles.panel}><Text style={styles.panelTitle}>PONTOS DE DEMONSTRAÇÃO</Text>{["Praça Mauá · fluxo moderado","Avenida Ana Costa · fluxo fluido","Avenida Conselheiro Nébias · fluxo intenso"].map(x=><Text key={x} style={styles.listItem}>{x}</Text>)}</View><Text style={styles.foot}>Estados operacionais ilustrativos. A integração com controladores semafóricos não está ativa.</Text></Shell>;}
 function Analises(){return <Shell title="Análises de mobilidade" subtitle="Indicadores para apoiar decisões urbanas"><View style={styles.panel}><Text style={styles.panelTitle}>ÍNDICE DE FLUIDEZ</Text><Text style={styles.bigNumber}>82/100</Text><Text style={styles.muted}>Valor simulado para demonstração da interface.</Text></View><View style={styles.panel}><Text style={styles.panelTitle}>LEITURA DO CENÁRIO</Text><Text style={styles.listItem}>Fluxo geral: moderado</Text><Text style={styles.listItem}>Pontos no mapa: 03 (simulados)</Text><Text style={styles.listItem}>Atualização: dados demonstrativos</Text></View></Shell>;}
@@ -122,7 +101,7 @@ const styles=StyleSheet.create({
  metrics:{flexDirection:"row",gap:12},metric:{flex:1,backgroundColor:theme.colors.surface,padding:15,borderRadius:16,borderWidth:1,borderColor:theme.colors.border},metricLabel:{color:theme.colors.muted,fontSize:9,fontWeight:"700",letterSpacing:1},metricValue:{color:theme.colors.text,fontSize:27,fontWeight:"800",marginVertical:8},muted:{color:theme.colors.muted,fontSize:11,lineHeight:17},
  panel:{backgroundColor:theme.colors.surface,padding:18,borderRadius:18,borderWidth:1,borderColor:theme.colors.border,marginTop:14},panelTitle:{color:theme.colors.primary,fontSize:10,fontWeight:"800",letterSpacing:1.5},bigNumber:{color:theme.colors.text,fontSize:46,fontWeight:"800",marginVertical:8},unit:{color:theme.colors.muted,fontSize:16},progress:{height:6,backgroundColor:theme.colors.surfaceAlt,borderRadius:4,marginTop:16,overflow:"hidden"},progressFill:{height:6,width:"82%",backgroundColor:theme.colors.primary,borderRadius:4},
  section:{color:theme.colors.muted,fontSize:10,fontWeight:"800",letterSpacing:1.5,marginTop:26,marginBottom:10},link:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",padding:17,backgroundColor:theme.colors.surface,borderRadius:13,marginBottom:9,borderWidth:1,borderColor:theme.colors.border},linkText:{color:theme.colors.text,fontWeight:"600"},arrow:{color:theme.colors.primary,fontSize:18},foot:{color:theme.colors.muted,fontSize:10,lineHeight:16,marginTop:16},
- mapFrame:{height:420,borderRadius:18,overflow:"hidden",borderWidth:1,borderColor:theme.colors.border},mapLoading:{...StyleSheet.absoluteFillObject,alignItems:"center",justifyContent:"center",gap:10,backgroundColor:theme.colors.surface},brandMark:{width:58,height:58,borderRadius:18,backgroundColor:theme.colors.primarySoft,alignItems:"center",justifyContent:"center",marginBottom:8},brandMarkText:{color:theme.colors.primary,fontSize:20,fontWeight:"900"},
+ mapFrame:{height:420,borderRadius:18,overflow:"hidden",borderWidth:1,borderColor:theme.colors.border},brandMark:{width:58,height:58,borderRadius:18,backgroundColor:theme.colors.primarySoft,alignItems:"center",justifyContent:"center",marginBottom:8},brandMarkText:{color:theme.colors.primary,fontSize:20,fontWeight:"900"},
  fieldWrap:{marginTop:14},statusOptions:{flexDirection:"row",flexWrap:"wrap",gap:7},statusOption:{paddingHorizontal:10,paddingVertical:9,borderRadius:10,borderWidth:1,borderColor:theme.colors.border,backgroundColor:theme.colors.background},statusOptionActive:{borderColor:theme.colors.primary,backgroundColor:theme.colors.primarySoft},statusOptionText:{color:theme.colors.muted,fontSize:9,fontWeight:"700"},statusOptionTextActive:{color:theme.colors.primary},fieldLabel:{color:theme.colors.muted,fontSize:10,fontWeight:"800",letterSpacing:1,marginBottom:7},input:{backgroundColor:theme.colors.background,borderWidth:1,borderColor:theme.colors.border,borderRadius:12,color:theme.colors.text,paddingHorizontal:13,paddingVertical:12,fontSize:14},multiline:{minHeight:88,textAlignVertical:"top"},
  button:{backgroundColor:theme.colors.primary,padding:15,borderRadius:12,alignItems:"center",marginTop:14},buttonText:{color:"#06131D",fontSize:11,fontWeight:"900",letterSpacing:1},buttonOutline:{backgroundColor:"transparent",borderWidth:1,borderColor:theme.colors.border},buttonOutlineText:{color:theme.colors.text},disabled:{opacity:0.55},
  error:{color:theme.colors.danger,fontSize:12,marginTop:12},success:{color:theme.colors.success,fontSize:12,marginTop:12},listItem:{color:theme.colors.text,fontSize:13,paddingVertical:10,borderBottomWidth:1,borderBottomColor:theme.colors.border},listTitle:{color:theme.colors.text,fontSize:16,fontWeight:"700",marginTop:12,marginBottom:6},rowBetween:{flexDirection:"row",justifyContent:"space-between",alignItems:"center"},refresh:{color:theme.colors.primary,fontSize:10,fontWeight:"900",letterSpacing:1},actions:{flexDirection:"row",justifyContent:"flex-end",gap:22,marginTop:16},delete:{color:theme.colors.danger,fontSize:10,fontWeight:"900",letterSpacing:1}

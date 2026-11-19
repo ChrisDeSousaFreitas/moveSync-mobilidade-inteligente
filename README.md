@@ -87,17 +87,7 @@ npm run typecheck
 npm run lint
 ```
 
-Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. Em emulador Android, `10.0.2.2` aponta para o computador; em celular físico, use o IP local do computador com a porta `8080`.
-
-#### Configuração do mapa no Android
-O mapa usa Google Maps no Android. O Expo Go depende da chave incluída na própria versão do Expo Go; a chave configurada no projeto só é aplicada a um binário nativo próprio. Para garantir o funcionamento em um development build ou APK:
-
-1. No Google Cloud Console, crie ou selecione um projeto e habilite **Maps SDK for Android**.
-2. Crie uma chave de API e, se aplicar restrições, informe o pacote `br.com.movesync.mobilidade` e a impressão digital SHA-1 do certificado usado para assinar o build.
-3. Coloque a chave em `EXPO_PUBLIC_MAPS_API_KEY` no arquivo local `mobile/.env` (não a envie ao Git).
-4. Gere um novo development build/APK depois de configurar a chave. Reiniciar apenas o Metro/Expo Go não altera a configuração nativa já instalada.
-
-A configuração nativa é aplicada por `mobile/app.config.js`.
+Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. Em emulador Android, `10.0.2.2` aponta para o computador; no Expo Go em celular físico, use o IP local do computador. Para builds nativos com Google Maps, configure `EXPO_PUBLIC_MAPS_API_KEY` no ambiente antes de gerar o aplicativo.
 
 
 ## Documentação adicional
