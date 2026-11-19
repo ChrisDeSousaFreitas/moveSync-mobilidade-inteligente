@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "Move Sync",
@@ -5,9 +6,20 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "splash": { "backgroundColor": "#07111D" },
-    "android": { "package": "br.com.movesync.mobilidade" },
-    "ios": { "bundleIdentifier": "br.com.movesync.mobilidade" },
-    "plugins": ["expo-secure-store"]
+    "android": {
+      "package": "br.com.movesync.mobilidade"
+    },
+    "ios": {
+      "bundleIdentifier": "br.com.movesync.mobilidade"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#07111D"
+        }
+      ]
+    ]
   }
 }
