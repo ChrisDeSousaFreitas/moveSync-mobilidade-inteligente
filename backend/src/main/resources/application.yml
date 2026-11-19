@@ -17,17 +17,27 @@ spring:
     console:
       enabled: ${H2_CONSOLE_ENABLED:false}
   ai:
-    openai:
-      api-key: ${OPENAI_API_KEY:disabled}
-      chat:
-        options:
-          model: ${OPENAI_CHAT_MODEL:gpt-4.1-mini}
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY:disabled}
+        chat:
+          model: gemini-2.5-flash
           temperature: 0.2
+        embedding:
+          api-key: ${GEMINI_API_KEY:disabled}
+          text:
+            options:
+              model: text-embedding-004
+              dimensions: 768
+    model:
+      chat: google-genai
+      embedding:
+        text: google-genai
     vectorstore:
       pgvector:
-        enabled: ${APP_AI_RAG_ENABLED:false}
         initialize-schema: true
-        dimensions: 1536
+        dimensions: 768
+        table-name: vector_store_gemini
 server:
   port: ${PORT:8080}
 app:
