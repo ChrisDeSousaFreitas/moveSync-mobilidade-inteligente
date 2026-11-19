@@ -27,7 +27,7 @@ spring:
           api-key: ${GEMINI_API_KEY:disabled}
           text:
             options:
-              model: text-embedding-004
+              model: gemini-embedding-001
               dimensions: 768
     model:
       chat: google-genai
