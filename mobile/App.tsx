@@ -7,7 +7,7 @@ import MapView, { Marker } from "react-native-maps";
 import { theme } from "./src/theme";
 import { authApi, ocorrenciasApi, limparSessao, recuperarSessao, salvarSessao, Ocorrencia, OcorrenciaInput, Sessao, Usuario, statusApi } from "./src/services/api";
 
-type Rotas = { Acesso:undefined; Central:undefined; Mapa:undefined; Cruzamentos:undefined; Analises:undefined; Ocorrencias:undefined; Perfil:undefined; Sobre:undefined };
+type Rotas = { Acesso:undefined; Central:undefined; Mapa:undefined; Cruzamentos:undefined; Analises:undefined; Ocorrencias:undefined; DetalheOcorrencia:{id:number}; Perfil:undefined; Sobre:undefined };
 const Stack=createNativeStackNavigator<Rotas>();
 const AuthContext=createContext<{usuario:Usuario|null;encerrar:()=>Promise<void>;expirar:()=>Promise<void>}>({usuario:null,encerrar:async()=>{},expirar:async()=>{}});
 const useAuth=()=>useContext(AuthContext);
@@ -52,7 +52,7 @@ function MapScreen(){
 }
 function Cruzamentos(){return <Shell title="Cruzamentos inteligentes" subtitle="Pontos de interesse na malha urbana de Santos"><View style={styles.panel}><Text style={styles.panelTitle}>PONTOS DE DEMONSTRAÇÃO</Text>{["Praça Mauá · fluxo moderado","Avenida Ana Costa · fluxo fluido","Avenida Conselheiro Nébias · fluxo intenso"].map(x=><Text key={x} style={styles.listItem}>{x}</Text>)}</View><Text style={styles.foot}>Estados operacionais ilustrativos. A integração com controladores semafóricos não está ativa.</Text></Shell>;}
 function Analises(){return <Shell title="Análises de mobilidade" subtitle="Indicadores para apoiar decisões urbanas"><View style={styles.panel}><Text style={styles.panelTitle}>ÍNDICE DE FLUIDEZ</Text><Text style={styles.bigNumber}>82/100</Text><Text style={styles.muted}>Valor simulado para demonstração da interface.</Text></View><View style={styles.panel}><Text style={styles.panelTitle}>LEITURA DO CENÁRIO</Text><Text style={styles.listItem}>Fluxo geral: moderado</Text><Text style={styles.listItem}>Pontos no mapa: 03 (simulados)</Text><Text style={styles.listItem}>Atualização: dados demonstrativos</Text></View></Shell>;}
-function Ocorrencias(){
+function Ocorrencias({navigation}:any){
  const {expirar}=useAuth();
  const [lista,setLista]=useState<Ocorrencia[]>([]),[titulo,setTitulo]=useState(""),[descricao,setDescricao]=useState(""),[categoria,setCategoria]=useState("CONGESTIONAMENTO"),[endereco,setEndereco]=useState(""),[status,setStatus]=useState<Ocorrencia["status"]>("ABERTA"),[editando,setEditando]=useState<number|null>(null),[busy,setBusy]=useState(false),[erro,setErro]=useState(""),[ok,setOk]=useState("");
  async function carregar(){setBusy(true);setErro("");try{setLista(await ocorrenciasApi.listar());}catch(e){setErro(e instanceof Error?e.message:"Falha ao carregar ocorrências.");if(e instanceof Error&&e.message.includes("sessão expirou"))await expirar();}finally{setBusy(false);}}
@@ -63,7 +63,21 @@ function Ocorrencias(){
  return <Shell title="Ocorrências" subtitle="Registre e acompanhe situações no trânsito.">
   <View style={styles.panel}><Text style={styles.panelTitle}>{editando===null?"NOVA OCORRÊNCIA":"EDITAR OCORRÊNCIA"}</Text><Campo label="Título" value={titulo} onChangeText={setTitulo} placeholder="Ex.: Acidente na via"/><Campo label="Descrição" value={descricao} onChangeText={setDescricao} multiline placeholder="Descreva o que aconteceu"/><Campo label="Categoria" value={categoria} onChangeText={setCategoria} placeholder="CONGESTIONAMENTO"/><Campo label="Endereço (opcional)" value={endereco} onChangeText={setEndereco}/><View style={styles.fieldWrap}><Text style={styles.fieldLabel}>STATUS</Text><View style={styles.statusOptions}>{(["ABERTA","EM_ANALISE","RESOLVIDA"] as const).map(opcao=><Pressable key={opcao} onPress={()=>setStatus(opcao)} style={[styles.statusOption,status===opcao&&styles.statusOptionActive]}><Text style={[styles.statusOptionText,status===opcao&&styles.statusOptionTextActive]}>{opcao.replace("_"," ")}</Text></Pressable>)}</View></View>{!!erro&&<Text style={styles.error}>{erro}</Text>}{!!ok&&<Text style={styles.success}>{ok}</Text>}<Botao label={busy?"SALVANDO...":editando===null?"REGISTRAR OCORRÊNCIA":"SALVAR ALTERAÇÕES"} onPress={salvar} disabled={busy}/>{editando!==null&&<Botao label="Cancelar edição" onPress={limpar} outline/>}</View>
   <View style={styles.rowBetween}><Text style={styles.section}>MINHAS OCORRÊNCIAS</Text><Pressable onPress={()=>void carregar()}><Text style={styles.refresh}>ATUALIZAR ↻</Text></Pressable></View>
-  {busy&&lista.length===0?<ActivityIndicator color={theme.colors.primary}/>:lista.length===0?<View style={styles.panel}><Text style={styles.muted}>Nenhuma ocorrência cadastrada ainda.</Text></View>:lista.map(item=><View key={item.id} style={styles.panel}><Text style={styles.panelTitle}>{item.categoria} · {item.status}</Text><Text style={styles.listTitle}>{item.titulo}</Text><Text style={styles.muted}>{item.descricao}</Text>{!!item.endereco&&<Text style={styles.muted}>{item.endereco}</Text>}<View style={styles.actions}><Pressable onPress={()=>{setEditando(item.id);setTitulo(item.titulo);setDescricao(item.descricao);setCategoria(item.categoria);setEndereco(item.endereco||"");setStatus(item.status);}}><Text style={styles.refresh}>EDITAR</Text></Pressable><Pressable onPress={()=>void excluir(item.id)}><Text style={styles.delete}>EXCLUIR</Text></Pressable></View></View>)}
+  {busy&&lista.length===0?<ActivityIndicator color={theme.colors.primary}/>:lista.length===0?<View style={styles.panel}><Text style={styles.muted}>Nenhuma ocorrência cadastrada ainda.</Text></View>:lista.map(item=><View key={item.id} style={styles.panel}><Text style={styles.panelTitle}>{item.categoria} · {item.status}</Text><Text style={styles.listTitle}>{item.titulo}</Text><Text style={styles.muted}>{item.descricao}</Text>{!!item.endereco&&<Text style={styles.muted}>{item.endereco}</Text>}<View style={styles.actions}><Pressable onPress={()=>navigation.navigate("DetalheOcorrencia",{id:item.id})}><Text style={styles.refresh}>CONSULTAR</Text></Pressable><Pressable onPress={()=>{setEditando(item.id);setTitulo(item.titulo);setDescricao(item.descricao);setCategoria(item.categoria);setEndereco(item.endereco||"");setStatus(item.status);}}><Text style={styles.refresh}>EDITAR</Text></Pressable><Pressable onPress={()=>void excluir(item.id)}><Text style={styles.delete}>EXCLUIR</Text></Pressable></View></View>)}
+ </Shell>;
+}
+function DetalheOcorrencia({route}:any){
+ const id=Number(route.params?.id);
+ const [item,setItem]=useState<Ocorrencia|null>(null),[busy,setBusy]=useState(true),[erro,setErro]=useState("");
+ useEffect(()=>{let ativo=true;ocorrenciasApi.consultar(id).then(v=>{if(ativo)setItem(v);}).catch(e=>{if(ativo)setErro(e instanceof Error?e.message:"Não foi possível consultar o registro.");}).finally(()=>{if(ativo)setBusy(false);});return()=>{ativo=false;};},[id]);
+ return <Shell title="Detalhe da ocorrência" subtitle={`Consulta do registro #${id}`}>
+  {busy?<ActivityIndicator color={theme.colors.primary}/>:erro?<Text style={styles.error}>{erro}</Text>:item?<View style={styles.panel}>
+   <Text style={styles.panelTitle}>{item.categoria} · {item.status.replace("_"," ")}</Text>
+   <Text style={styles.listTitle}>{item.titulo}</Text>
+   <Text style={styles.section}>DESCRIÇÃO</Text><Text style={styles.muted}>{item.descricao}</Text>
+   <Text style={styles.section}>ENDEREÇO</Text><Text style={styles.muted}>{item.endereco||"Não informado"}</Text>
+   <Text style={styles.section}>DATA DE REGISTRO</Text><Text style={styles.muted}>{item.criadaEm?new Date(item.criadaEm).toLocaleString("pt-BR"):"Não informada"}</Text>
+  </View>:null}
  </Shell>;
 }
 function Perfil(){const {usuario,encerrar}=useAuth();return <Shell title="Meu perfil" subtitle="Sua conta no Move Sync"><View style={styles.panel}><Text style={styles.panelTitle}>CONTA AUTENTICADA</Text><Text style={styles.listTitle}>{usuario?.nome}</Text><Text style={styles.muted}>{usuario?.email}</Text><Botao label="SAIR DA CONTA" onPress={()=>void encerrar()} outline/></View></Shell>;}
@@ -76,7 +90,7 @@ export default function App(){
  if(iniciando)return <View style={styles.loading}><ActivityIndicator color={theme.colors.primary} size="large"/><Text style={styles.muted}>Preparando o Move Sync...</Text></View>;
  return <AuthContext.Provider value={{usuario:sessao?.usuario||null,encerrar,expirar}}><NavigationContainer theme={navTheme}><StatusBar style="light"/><Stack.Navigator screenOptions={{headerStyle:{backgroundColor:theme.colors.background},headerTintColor:theme.colors.text,headerTitleStyle:{fontWeight:"700"},contentStyle:{backgroundColor:theme.colors.background}}}>
  {sessao===null?<Stack.Screen name="Acesso" options={{headerShown:false}}>{()=><AuthScreen onAuth={s=>setSessao({token:s.token,usuario:{id:s.id,nome:s.nome,email:s.email}})}/>}</Stack.Screen>:<>
- <Stack.Screen name="Central" component={Central} options={{title:"Move Sync"}}/><Stack.Screen name="Mapa" component={MapScreen}/><Stack.Screen name="Cruzamentos" component={Cruzamentos}/><Stack.Screen name="Analises" component={Analises}/><Stack.Screen name="Ocorrencias" component={Ocorrencias}/><Stack.Screen name="Perfil" component={Perfil}/><Stack.Screen name="Sobre" component={Sobre}/>
+ <Stack.Screen name="Central" component={Central} options={{title:"Move Sync"}}/><Stack.Screen name="Mapa" component={MapScreen}/><Stack.Screen name="Cruzamentos" component={Cruzamentos}/><Stack.Screen name="Analises" component={Analises}/><Stack.Screen name="Ocorrencias" component={Ocorrencias}/><Stack.Screen name="DetalheOcorrencia" component={DetalheOcorrencia} options={{title:"Consultar ocorrência"}}/><Stack.Screen name="Perfil" component={Perfil}/><Stack.Screen name="Sobre" component={Sobre}/>
  </>}
  </Stack.Navigator></NavigationContainer></AuthContext.Provider>;
 }
