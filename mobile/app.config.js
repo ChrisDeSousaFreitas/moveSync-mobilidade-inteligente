@@ -1,20 +1,14 @@
 module.exports = ({ config }) => {
   const mapsKey = process.env.EXPO_PUBLIC_MAPS_API_KEY || "";
+  const plugins = config.plugins || [];
+
   return {
     ...config,
-    android: {
-      ...config.android,
-      config: {
-        ...config.android?.config,
-        googleMaps: { apiKey: mapsKey },
-      },
-    },
-    ios: {
-      ...config.ios,
-      config: {
-        ...config.ios?.config,
-        googleMapsApiKey: mapsKey,
-      },
-    },
+    plugins: [
+      ...plugins,
+      ...(mapsKey
+        ? [["react-native-maps", { androidGoogleMapsApiKey: mapsKey }]]
+        : []),
+    ],
   };
 };
