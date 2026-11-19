@@ -3,7 +3,7 @@ import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+// Mapa urbano ilustrativo construído com componentes nativos para funcionar no Expo Go.
 import { theme } from "./src/theme";
 import { authApi, ocorrenciasApi, limparSessao, recuperarSessao, salvarSessao, Ocorrencia, OcorrenciaInput, Sessao, Usuario, statusApi } from "./src/services/api";
 
@@ -47,19 +47,84 @@ function Central({navigation}:any){
  </Shell>;
 }
 function MapScreen(){
- const points=[{id:"1",title:"Praça Mauá",latitude:-23.9352,longitude:-46.3331,level:"Moderado"},{id:"2",title:"Avenida Ana Costa",latitude:-23.9634,longitude:-46.3336,level:"Fluido"},{id:"3",title:"Avenida Conselheiro Nébias",latitude:-23.9514,longitude:-46.3298,level:"Intenso"}];
+ const [faseFluxo,setFaseFluxo]=useState(0);
+ const [selecionado,setSelecionado]=useState("maua");
+ useEffect(()=>{const timer=setInterval(()=>setFaseFluxo(v=>(v+1)%4),3500);return()=>clearInterval(timer);},[]);
+ const pontos=[
+  {id:"maua",nome:"Praça Mauá",regiao:"Centro",fluxo:"Moderado",cor:theme.colors.warning,veiculos:"420 veículos/h"},
+  {id:"ana",nome:"Av. Ana Costa",regiao:"Vila Mathias / Gonzaga",fluxo:"Fluido",cor:theme.colors.success,veiculos:"310 veículos/h"},
+  {id:"nebias",nome:"Av. Conselheiro Nébias",regiao:"Vila Nova",fluxo:"Intenso",cor:theme.colors.danger,veiculos:"554 veículos/h"}
+ ];
+ const atual=pontos.find(p=>p.id===selecionado)||pontos[0];
+ const cores=[
+  [theme.colors.warning,theme.colors.success,theme.colors.danger],
+  [theme.colors.success,theme.colors.warning,theme.colors.danger],
+  [theme.colors.warning,theme.colors.success,theme.colors.warning],
+  [theme.colors.danger,theme.colors.success,theme.colors.warning]
+ ][faseFluxo];
+ const rua=(left:string,top:string,width:string,height:string,rotate="0deg")=>({position:"absolute" as const,left,top,width,height,backgroundColor:"#263849",borderRadius:5,transform:[{rotate}],borderWidth:1,borderColor:"#405568"});
+ const faixa=(left:string,top:string,width:string,rotate="0deg",cor=theme.colors.success)=>({position:"absolute" as const,left,top,width,height:5,backgroundColor:cor,borderRadius:4,transform:[{rotate}],zIndex:5 as const,opacity:0.95});
+ const marcador=(id:string,left:string,top:string,cor:string)=> <Pressable key={id} onPress={()=>setSelecionado(id)} style={{position:"absolute",left,top,zIndex:10,alignItems:"center"}}>
+  <View style={{width:25,height:25,borderRadius:14,backgroundColor:cor,borderWidth:3,borderColor:"#F5F8FA",alignItems:"center",justifyContent:"center"}}><Text style={{fontSize:9,fontWeight:"900",color:"#10202B"}}>{id==="maua"?"1":id==="ana"?"2":"3"}</Text></View>
+ </Pressable>;
  return <SafeAreaView style={styles.safe}>
-  <View style={styles.mapScreen}>
+  <ScrollView contentContainerStyle={styles.mapScreen}>
    <Text style={styles.eyebrow}>MOVE SYNC / MOBILIDADE URBANA</Text>
    <Text style={styles.heading}>Mapa urbano</Text>
-   <Text style={styles.subtitle}>Santos • cartografia real com pontos ilustrativos</Text>
-   <View style={styles.mapFrame}>
-    <MapView style={styles.map} initialRegion={{latitude:-23.9535,longitude:-46.3336,latitudeDelta:0.055,longitudeDelta:0.055}} showsCompass showsScale>
-     {points.map(p=><Marker key={p.id} coordinate={{latitude:p.latitude,longitude:p.longitude}} title={p.title} description={`Fluxo ${p.level} • demonstração`}/>)}
-    </MapView>
+   <Text style={styles.subtitle}>Santos • mapa esquemático com fluxo de trânsito simulado</Text>
+   <View style={styles.mapCanvas}>
+    <View style={{position:"absolute",left:0,right:0,top:0,bottom:0,backgroundColor:"#182B3A"}}/>
+    {[
+     ["4%","5%","24%","13%"],["37%","4%","23%","13%"],["69%","5%","24%","13%"],
+     ["3%","27%","24%","14%"],["37%","27%","23%","14%"],["70%","28%","24%","13%"],
+     ["4%","51%","24%","14%"],["38%","51%","22%","14%"],["70%","51%","24%","14%"],
+     ["5%","75%","22%","10%"],["39%","75%","22%","10%"],["70%","75%","24%","10%"]
+    ].map((b,i)=><View key={i} style={{position:"absolute",left:b[0],top:b[1],width:b[2],height:b[3],backgroundColor:i===4||i===8?"#244B43":"#203747",borderRadius:7,borderWidth:1,borderColor:"#2C4657"}}/>)}
+    <View style={[rua("31%","0%","4%","100%"),{backgroundColor:"#34495A"}]}/>
+    <View style={[rua("63%","0%","4%","100%"),{backgroundColor:"#34495A"}]}/>
+    <View style={[rua("0%","21%","100%","4%"),{backgroundColor:"#34495A"}]}/>
+    <View style={[rua("0%","45%","100%","4%"),{backgroundColor:"#34495A"}]}/>
+    <View style={[rua("0%","69%","100%","4%"),{backgroundColor:"#34495A"}]}/>
+    <View style={[rua("15%","0%","3%","100%"),{backgroundColor:"#2B4051"}]}/>
+    <View style={[rua("82%","0%","3%","100%"),{backgroundColor:"#2B4051"}]}/>
+    <View style={[rua("0%","88%","100%","12%"),{backgroundColor:"#24566A",borderRadius:0,borderWidth:0}]}/>
+    <View style={[rua("0%","84%","100%","1.2%"),{backgroundColor:"#6CA6B5",borderWidth:0,borderRadius:0}]}/>
+    <View style={[rua("0%","10%","100%","1.2%"),{backgroundColor:"#405568",borderWidth:0,borderRadius:0}]}/>
+    <View style={[faixa("31.5%","13%","28%", "0deg",cores[0]) ]}/>
+    <View style={[faixa("31.5%","36%","27%","0deg",cores[0]) ]}/>
+    <View style={[faixa("63.5%","51%","25%","0deg",cores[1]) ]}/>
+    <View style={[faixa("16%","45%","32%","90deg",cores[1]) ]}/>
+    <View style={[faixa("64.5%","20%","30%","90deg",cores[2]) ]}/>
+    <View style={[faixa("31.5%","67%","25%","0deg",cores[2]) ]}/>
+    <Text style={{position:"absolute",left:"32%",top:"3%",color:"#C7D5DE",fontSize:8,fontWeight:"800",letterSpacing:1}}>AV. ANA COSTA</Text>
+    <Text style={{position:"absolute",left:"65%",top:"3%",color:"#C7D5DE",fontSize:7,fontWeight:"800",letterSpacing:0.5}}>CONS. NÉBIAS</Text>
+    <Text style={{position:"absolute",left:"3%",top:"22%",color:"#C7D5DE",fontSize:8,fontWeight:"700"}}>R. JOÃO PESSOA</Text>
+    <Text style={{position:"absolute",left:"4%",top:"46%",color:"#C7D5DE",fontSize:8,fontWeight:"700"}}>AV. WASHINGTON LUIZ</Text>
+    <Text style={{position:"absolute",left:"5%",top:"70%",color:"#C7D5DE",fontSize:8,fontWeight:"700"}}>AV. BERNARDINO DE CAMPOS</Text>
+    <Text style={{position:"absolute",left:"5%",top:"91%",color:"#B5DCE7",fontSize:9,fontWeight:"800",letterSpacing:2}}>BAÍA DE SANTOS</Text>
+    <Text style={{position:"absolute",left:"5%",top:"5%",color:"#A7C1CE",fontSize:8,fontWeight:"700"}}>CENTRO</Text>
+    <Text style={{position:"absolute",left:"5%",top:"56%",color:"#A7C1CE",fontSize:8,fontWeight:"700"}}>VILA MATHIAS</Text>
+    <Text style={{position:"absolute",left:"73%",top:"78%",color:"#A7C1CE",fontSize:8,fontWeight:"700"}}>GONZAGA</Text>
+    {marcador("maua","47%","16%",theme.colors.warning)}
+    {marcador("ana","22%","57%",theme.colors.success)}
+    {marcador("nebias","72%","39%",theme.colors.danger)}
+    <View style={{position:"absolute",right:10,top:10,backgroundColor:"#102331CC",paddingHorizontal:9,paddingVertical:6,borderRadius:8}}><Text style={{color:"#E8F1F5",fontSize:8,fontWeight:"800",letterSpacing:1}}>SANTOS · SP</Text></View>
    </View>
-   <Text style={styles.foot}>O mapa utiliza cartografia real. Marcadores e indicadores são ilustrativos e não representam sensores conectados.</Text>
-  </View>
+   <View style={styles.mapLegend}>
+    <View style={styles.legendItem}><View style={[styles.legendDot,{backgroundColor:theme.colors.success}]}/><Text style={styles.legendText}>FLUIDO</Text></View>
+    <View style={styles.legendItem}><View style={[styles.legendDot,{backgroundColor:theme.colors.warning}]}/><Text style={styles.legendText}>MODERADO</Text></View>
+    <View style={styles.legendItem}><View style={[styles.legendDot,{backgroundColor:theme.colors.danger}]}/><Text style={styles.legendText}>INTENSO</Text></View>
+   </View>
+   <View style={styles.mapInfo}>
+    <View style={{flex:1}}>
+     <Text style={styles.panelTitle}>PONTO SELECIONADO · {atual.regiao.toUpperCase()}</Text>
+     <Text style={styles.mapPointTitle}>{atual.nome}</Text>
+     <Text style={styles.muted}>Fluxo {atual.fluxo} · {atual.veiculos}</Text>
+    </View>
+    <View style={[styles.mapFlowBadge,{backgroundColor:atual.cor}]}><Text style={{color:"#10202B",fontSize:9,fontWeight:"900"}}>{atual.fluxo.toUpperCase()}</Text></View>
+   </View>
+   <Text style={styles.foot}>Mapa ilustrativo inspirado na malha urbana de Santos. Vias, marcadores e volumes de tráfego são simulados para demonstração acadêmica; não representam dados de sensores em tempo real.</Text>
+  </ScrollView>
  </SafeAreaView>;
 }
 function Cruzamentos(){return <Shell title="Cruzamentos inteligentes" subtitle="Pontos de interesse na malha urbana de Santos"><View style={styles.panel}><Text style={styles.panelTitle}>PONTOS DE DEMONSTRAÇÃO</Text>{["Praça Mauá · fluxo moderado","Avenida Ana Costa · fluxo fluido","Avenida Conselheiro Nébias · fluxo intenso"].map(x=><Text key={x} style={styles.listItem}>{x}</Text>)}</View><Text style={styles.foot}>Estados operacionais ilustrativos. A integração com controladores semafóricos não está ativa.</Text></Shell>;}
@@ -113,7 +178,7 @@ const styles=StyleSheet.create({
  metrics:{flexDirection:"row",gap:12},metric:{flex:1,backgroundColor:theme.colors.surface,padding:15,borderRadius:16,borderWidth:1,borderColor:theme.colors.border},metricLabel:{color:theme.colors.muted,fontSize:9,fontWeight:"700",letterSpacing:1},metricValue:{color:theme.colors.text,fontSize:27,fontWeight:"800",marginVertical:8},muted:{color:theme.colors.muted,fontSize:11,lineHeight:17},
  panel:{backgroundColor:theme.colors.surface,padding:18,borderRadius:18,borderWidth:1,borderColor:theme.colors.border,marginTop:14},panelTitle:{color:theme.colors.primary,fontSize:10,fontWeight:"800",letterSpacing:1.5},bigNumber:{color:theme.colors.text,fontSize:46,fontWeight:"800",marginVertical:8},unit:{color:theme.colors.muted,fontSize:16},progress:{height:6,backgroundColor:theme.colors.surfaceAlt,borderRadius:4,marginTop:16,overflow:"hidden"},progressFill:{height:6,width:"82%",backgroundColor:theme.colors.primary,borderRadius:4},
  section:{color:theme.colors.muted,fontSize:10,fontWeight:"800",letterSpacing:1.5,marginTop:26,marginBottom:10},link:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",padding:17,backgroundColor:theme.colors.surface,borderRadius:13,marginBottom:9,borderWidth:1,borderColor:theme.colors.border},linkText:{color:theme.colors.text,fontWeight:"600"},arrow:{color:theme.colors.primary,fontSize:18},foot:{color:theme.colors.muted,fontSize:10,lineHeight:16,marginTop:16},
- mapScreen:{flex:1,padding:22,paddingBottom:16},mapFrame:{flex:1,minHeight:420,width:"100%",borderRadius:18,borderWidth:1,borderColor:theme.colors.border,backgroundColor:theme.colors.surface},map:{width:"100%",height:"100%"},brandMark:{width:58,height:58,borderRadius:18,backgroundColor:theme.colors.primarySoft,alignItems:"center",justifyContent:"center",marginBottom:8},brandMarkText:{color:theme.colors.primary,fontSize:20,fontWeight:"900"},
+ mapScreen:{padding:18,paddingBottom:30},mapCanvas:{height:460,width:"100%",borderRadius:18,overflow:"hidden",borderWidth:1,borderColor:theme.colors.border,position:"relative",backgroundColor:"#182B3A"},mapLegend:{flexDirection:"row",justifyContent:"space-around",paddingVertical:13,marginTop:8,backgroundColor:theme.colors.surface,borderRadius:12,borderWidth:1,borderColor:theme.colors.border},legendItem:{flexDirection:"row",alignItems:"center",gap:6},legendDot:{width:8,height:8,borderRadius:5},legendText:{fontSize:8,fontWeight:"800",letterSpacing:0.7,color:theme.colors.muted},mapInfo:{flexDirection:"row",alignItems:"center",gap:10,backgroundColor:theme.colors.surface,padding:15,borderRadius:14,borderWidth:1,borderColor:theme.colors.border,marginTop:10},mapPointTitle:{color:theme.colors.text,fontSize:15,fontWeight:"800",marginTop:7,marginBottom:3},mapFlowBadge:{paddingHorizontal:10,paddingVertical:8,borderRadius:9},brandMark:{width:58,height:58,borderRadius:18,backgroundColor:theme.colors.primarySoft,alignItems:"center",justifyContent:"center",marginBottom:8},brandMarkText:{color:theme.colors.primary,fontSize:20,fontWeight:"900"},
  fieldWrap:{marginTop:14},statusOptions:{flexDirection:"row",flexWrap:"wrap",gap:7},statusOption:{paddingHorizontal:10,paddingVertical:9,borderRadius:10,borderWidth:1,borderColor:theme.colors.border,backgroundColor:theme.colors.background},statusOptionActive:{borderColor:theme.colors.primary,backgroundColor:theme.colors.primarySoft},statusOptionText:{color:theme.colors.muted,fontSize:9,fontWeight:"700"},statusOptionTextActive:{color:theme.colors.primary},fieldLabel:{color:theme.colors.muted,fontSize:10,fontWeight:"800",letterSpacing:1,marginBottom:7},input:{backgroundColor:theme.colors.background,borderWidth:1,borderColor:theme.colors.border,borderRadius:12,color:theme.colors.text,paddingHorizontal:13,paddingVertical:12,fontSize:14},multiline:{minHeight:88,textAlignVertical:"top"},
  button:{backgroundColor:theme.colors.primary,padding:15,borderRadius:12,alignItems:"center",marginTop:14},buttonText:{color:"#06131D",fontSize:11,fontWeight:"900",letterSpacing:1},buttonOutline:{backgroundColor:"transparent",borderWidth:1,borderColor:theme.colors.border},buttonOutlineText:{color:theme.colors.text},disabled:{opacity:0.55},
  error:{color:theme.colors.danger,fontSize:12,marginTop:12},success:{color:theme.colors.success,fontSize:12,marginTop:12},listItem:{color:theme.colors.text,fontSize:13,paddingVertical:10,borderBottomWidth:1,borderBottomColor:theme.colors.border},listTitle:{color:theme.colors.text,fontSize:16,fontWeight:"700",marginTop:12,marginBottom:6},rowBetween:{flexDirection:"row",justifyContent:"space-between",alignItems:"center"},refresh:{color:theme.colors.primary,fontSize:10,fontWeight:"900",letterSpacing:1},actions:{flexDirection:"row",justifyContent:"flex-end",gap:22,marginTop:16},delete:{color:theme.colors.danger,fontSize:10,fontWeight:"900",letterSpacing:1}
