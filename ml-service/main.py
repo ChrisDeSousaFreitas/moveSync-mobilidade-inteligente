@@ -22,7 +22,7 @@ async def train(file:UploadFile=File(...)):
   if len(df)<30: raise HTTPException(422,"São necessárias pelo menos 30 linhas válidas.")
   scaler=StandardScaler(); x=scaler.fit_transform(df[["ano","mes","acidentes","vitimas_fatais"]])
   model=IsolationForest(contamination="auto",random_state=42).fit(x)
-  bundle={"model":model,"scaler":scaler,"rows":len(df),"source":file.filename}
+  pred=model.predict(x)\n  bundle={"model":model,"scaler":scaler,"rows":len(df),"source":file.filename,"anomalies":int((pred==-1).sum())}
   MODEL.parent.mkdir(exist_ok=True);joblib.dump(bundle,MODEL)
   return {"status":"trained","records":len(df),"source_file":file.filename,"method":"Isolation Forest","limitation":"Padrões atípicos históricos; não prevê acidentes."}
  except HTTPException: raise
@@ -32,4 +32,4 @@ def analysis():
  global bundle
  if bundle is None and MODEL.exists(): bundle=joblib.load(MODEL)
  if bundle is None:return {"status":"sem_dados","message":"Modelo não treinado. Importe CSV público normalizado.","results":{},"source":"nenhuma base importada"}
- return {"status":"treinado","message":"Modelo treinado com dados agregados.","results":{"registros":bundle["rows"],"metodo":"Isolation Forest","limite":"Detecção exploratória, não previsão."},"source":bundle["source"]}
+ return {"status":"treinado","message":"Modelo treinado com dados agregados.","results":{"registros":bundle["rows"],"metodo":"Isolation Forest","limite":"Detecção exploratória, não previsão.","amostras_atipicas_sinalizadas":bundle["anomalies"]},"source":bundle["source"]}

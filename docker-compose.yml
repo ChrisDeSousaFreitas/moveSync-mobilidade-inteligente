@@ -27,7 +27,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-MoveSync-Local-Compose-Secret-Change-Before-Publishing}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-disabled}
       APP_AI_ENABLED: ${APP_AI_ENABLED:-false}
-      APP_AI_RAG_ENABLED: ${APP_AI_RAG_ENABLED:-false}
+      APP_AI_RAG_ENABLED: ${APP_AI_RAG_ENABLED:-false}\n      ML_SERVICE_URL: http://ml:8000
     ports:
       - "8080:8080"
   ml:

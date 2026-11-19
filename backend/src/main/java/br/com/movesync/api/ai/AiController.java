@@ -9,13 +9,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.core.env.Environment;
+import org.springframework.web.client.RestClient;
 
 @RestController @RequestMapping("/api/ai")
 @ConditionalOnProperty(name="app.ai.enabled",havingValue="true")
 public class AiController {
- private final ChatClient chat; private final VectorStore store;
- public AiController(ChatClient.Builder builder, VectorStore store){
-  this.chat=builder.defaultSystem("Você é o assistente MoveSync, responda em português. Use somente o contexto recuperado. Nunca invente números, acidentes ou trânsito em tempo real. Diferencie dados históricos de atuais. Se não houver evidência, diga que não há dados suficientes.").build();this.store=store;
+ private final ChatClient chat; private final VectorStore store; private final RestClient ml;
+ public AiController(ChatClient.Builder builder, VectorStore store, Environment env){
+  this.ml=RestClient.builder().baseUrl(env.getProperty("app.ai.ml.url","http://localhost:8000")).build(); this.chat=builder.defaultSystem("Você é o assistente MoveSync, responda em português. Use somente o contexto recuperado. Nunca invente números, acidentes ou trânsito em tempo real. Diferencie dados históricos de atuais. Se não houver evidência, diga que não há dados suficientes.").build();this.store=store;
  }
  public record Pergunta(@NotBlank String message){}
  public record Resposta(String answer,List<String> sources){}
@@ -34,5 +36,5 @@ public class AiController {
   store.add(List.of(new Document(d.content(),Map.of("title",d.title(),"source",d.source()))));
   return Map.of("status","indexed","title",d.title(),"source",d.source());
  }
- @GetMapping("/analysis") public Map<String,Object> analysis(){return Map.of("status","ml_service_separado","message","Consulte o serviço ML em http://localhost:8000/health. Importe somente CSV público validado.","source","Infosiga-SP / dados municipais");}
+ @GetMapping("/analysis") public Map<String,Object> analysis(){try{return ml.get().uri("/analysis").retrieve().body(Map.class);}catch(Exception e){return Map.of("status","indisponivel","message","Serviço ML indisponível ou ainda não treinado.","results",Map.of(),"source","Infosiga-SP / dados municipais");}}
 }
