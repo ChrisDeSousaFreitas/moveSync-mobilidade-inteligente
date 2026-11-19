@@ -1,9 +1,12 @@
-Nome do grupo: PREENCHER
-Integrantes (adicione uma linha por pessoa):
-- PREENCHER NOME COMPLETO E RM
+Nome do grupo: MoveSync
+
+Integrantes:
+- Pedro Fonseca — RM 562521
+- Matheus Enrico — RM 562532
+- Bruno Zanateli — RM 563736
+- Rodrigo Tiezzi — RM 562975
+- Christian de Sousa Freitas — RM 566098
 
 Projeto: Move Sync — Mobilidade Urbana Inteligente
 Repositório: https://github.com/ChrisDeSousaFreitas/moveSync-mobilidade-inteligente
-Vídeo de demonstração (YouTube público ou não listado): PREENCHER LINK
-
-Aplicativo distribuído pelo Firebase App Distribution: PREENCHER LINK/CONFIRMAÇÃO
+Vídeo de demonstração (YouTube público ou não listado, até 3 minutos): PENDENTE — inserir link após a gravação.
