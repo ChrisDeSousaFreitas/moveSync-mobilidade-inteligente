@@ -16,14 +16,6 @@ spring:
   h2:
     console:
       enabled: ${H2_CONSOLE_ENABLED:false}
-server:
-  port: ${PORT:8080}
-app:
-  jwt:
-    secret: ${JWT_SECRET:MoveSync-Dev-Secret-Key-2026-Use-At-Least-32-Bytes}
-    expiracao-ms: 86400000
-
-spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:disabled}
@@ -36,6 +28,11 @@ spring:
         enabled: ${APP_AI_RAG_ENABLED:false}
         initialize-schema: true
         dimensions: 1536
+server:
+  port: ${PORT:8080}
 app:
+  jwt:
+    secret: ${JWT_SECRET:MoveSync-Dev-Secret-Key-2026-Use-At-Least-32-Bytes}
+    expiracao-ms: 86400000
   ai:
     enabled: ${APP_AI_ENABLED:false}
