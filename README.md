@@ -10,12 +10,33 @@ Reunir informações de trânsito em uma interface clara, apoiar a leitura de fl
 - `backend/`: API REST em Java com Spring Boot.
 - `docs/`: arquitetura, decisões técnicas e instruções de execução.
 
+## Integrantes — Grupo MoveSync
+- Pedro Fonseca — RM 562521
+- Matheus Enrico — RM 562532
+- Bruno Zanateli — RM 563736
+- Rodrigo Tiezzi — RM 562975
+- Christian de Sousa Freitas — RM 566098
+
 ## Funcionalidades
 - Cadastro e login com token JWT.
 - Painel de mobilidade e mapa urbano.
 - Visualização de cruzamentos e indicadores de fluxo.
 - CRUD de ocorrências associado ao usuário autenticado.
 - Modo de demonstração com dados simulados, identificado como simulação.
+
+## Acesso para avaliação (conta de teste)
+Na primeira execução, selecione **Criar uma conta** e cadastre a conta de demonstração abaixo. Depois, use os mesmos dados na tela de login:
+
+- **E-mail:** `teste@movesync.app`
+- **Senha:** `MoveSync@2026`
+
+A conta é criada na API no primeiro cadastro; ela não é pré-semeada no banco. Se a base local for apagada, basta cadastrá-la novamente.
+
+## Persistência local
+O aplicativo mantém uma cópia local das ocorrências com AsyncStorage, identificada por usuário. Quando a API está disponível, ela continua sendo a fonte principal dos dados e atualiza o cache local. Se a conexão falhar, a lista e os detalhes já armazenados podem ser consultados no aparelho.
+
+## Vídeo de demonstração
+**Pendente:** inserir aqui o link público ou não listado do YouTube (até 3 minutos), após gravar o fluxo de login, lista, cadastro e consulta.
 
 ## Tecnologias
 React Native, Expo, TypeScript, React Navigation, Java 21, Spring Boot, Spring Security, Spring Data JPA, JWT, H2 e PostgreSQL.
