@@ -22,7 +22,8 @@ async def train(file:UploadFile=File(...)):
   if len(df)<30: raise HTTPException(422,"São necessárias pelo menos 30 linhas válidas.")
   scaler=StandardScaler(); x=scaler.fit_transform(df[["ano","mes","acidentes","vitimas_fatais"]])
   model=IsolationForest(contamination="auto",random_state=42).fit(x)
-  pred=model.predict(x)\n  bundle={"model":model,"scaler":scaler,"rows":len(df),"source":file.filename,"anomalies":int((pred==-1).sum())}
+  pred=model.predict(x)
+  bundle={"model":model,"scaler":scaler,"rows":len(df),"source":file.filename,"anomalies":int((pred==-1).sum())}
   MODEL.parent.mkdir(exist_ok=True);joblib.dump(bundle,MODEL)
   return {"status":"trained","records":len(df),"source_file":file.filename,"method":"Isolation Forest","limitation":"Padrões atípicos históricos; não prevê acidentes."}
  except HTTPException: raise
