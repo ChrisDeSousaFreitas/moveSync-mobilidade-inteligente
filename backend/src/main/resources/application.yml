@@ -22,3 +22,20 @@ app:
   jwt:
     secret: ${JWT_SECRET:MoveSync-Dev-Secret-Key-2026-Use-At-Least-32-Bytes}
     expiracao-ms: 86400000
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:disabled}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:gpt-4.1-mini}
+          temperature: 0.2
+    vectorstore:
+      pgvector:
+        enabled: ${APP_AI_RAG_ENABLED:false}
+        initialize-schema: true
+        dimensions: 1536
+app:
+  ai:
+    enabled: ${APP_AI_ENABLED:false}

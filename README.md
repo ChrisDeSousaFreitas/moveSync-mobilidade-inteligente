@@ -22,6 +22,7 @@ Reunir informações de trânsito em uma interface clara, apoiar a leitura de fl
 - Painel de mobilidade e mapa urbano.
 - Visualização de cruzamentos e indicadores de fluxo.
 - CRUD de ocorrências associado ao usuário autenticado.
+- Assistente MoveSync AI com RAG e análise exploratória por Machine Learning (ativação opcional).
 - Modo de demonstração com dados simulados, identificado como simulação.
 
 ## Acesso para avaliação (conta de teste)
@@ -39,7 +40,7 @@ O aplicativo mantém uma cópia local das ocorrências com AsyncStorage, identif
 [Assistir ao vídeo de demonstração do MoveSync no YouTube](https://youtube.com/shorts/K-mP8g3LGI0)
 
 ## Tecnologias
-React Native, Expo, TypeScript, React Navigation, Java 21, Spring Boot, Spring Security, Spring Data JPA, JWT, H2 e PostgreSQL.
+React Native, Expo, TypeScript, React Navigation, Java 21, Spring Boot, Spring Security, Spring Data JPA, JWT, H2, PostgreSQL/PGVector, Spring AI, OpenAI, Python e Scikit-learn.
 
 ## API
 A API inicia na porta `8080`. No perfil padrão, utiliza H2 em arquivo em `backend/data/`, preservando os registros entre reinicializações locais. Para persistência fora do ciclo de execução, configure PostgreSQL com `DATABASE_URL`, `DATABASE_DRIVER`, `DATABASE_USERNAME` e `DATABASE_PASSWORD`.
@@ -91,6 +92,7 @@ Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. E
 
 ## Documentação adicional
 - `docs/arquitetura.md`: organização dos módulos e segurança.
+- `docs/ia-movesync.md`: configuração, arquitetura, dados, RAG, ML e avaliação.
 - `docs/api.md`: contratos e exemplos de requisição.
 - `docs/publicacao-api.md`: publicação do backend.
 - `docs/distribuicao.md`: EAS Build e Firebase App Distribution.

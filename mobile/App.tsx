@@ -7,7 +7,8 @@ import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Text, TextInput, Vi
 import { theme } from "./src/theme";
 import { authApi, ocorrenciasApi, limparSessao, recuperarSessao, salvarSessao, Ocorrencia, OcorrenciaInput, Sessao, Usuario, statusApi } from "./src/services/api";
 
-type Rotas = { Acesso:undefined; Central:undefined; Mapa:undefined; Cruzamentos:undefined; Analises:undefined; Ocorrencias:undefined; DetalheOcorrencia:{id:number}; Perfil:undefined; Sobre:undefined };
+import InteligenciaScreen from "./src/screens/InteligenciaScreen";
+type Rotas = { Acesso:undefined; Central:undefined; Inteligencia:undefined; Mapa:undefined; Cruzamentos:undefined; Analises:undefined; Ocorrencias:undefined; DetalheOcorrencia:{id:number}; Perfil:undefined; Sobre:undefined };
 const Stack=createNativeStackNavigator<Rotas>();
 const AuthContext=createContext<{usuario:Usuario|null;encerrar:()=>Promise<void>;expirar:()=>Promise<void>}>({usuario:null,encerrar:async()=>{},expirar:async()=>{}});
 const useAuth=()=>useContext(AuthContext);
@@ -37,7 +38,7 @@ function AuthScreen({onAuth}:{onAuth:(s:Sessao)=>void}){
 function Central({navigation}:any){
  const [apiEstado,setApiEstado]=useState<"verificando"|"online"|"offline">("verificando");
  useEffect(()=>{statusApi.consultar().then(()=>setApiEstado("online")).catch(()=>setApiEstado("offline"));},[]);
- const links:[string,keyof Rotas][]=[["Mapa urbano","Mapa"],["Cruzamentos","Cruzamentos"],["Análises","Analises"],["Ocorrências","Ocorrencias"],["Meu perfil","Perfil"],["Sobre o app","Sobre"]];
+ const links:[string,keyof Rotas][]=[["MoveSync AI","Inteligencia"],["Mapa urbano","Mapa"],["Cruzamentos","Cruzamentos"],["Análises","Analises"],["Ocorrências","Ocorrencias"],["Meu perfil","Perfil"],["Sobre o app","Sobre"]];
  return <Shell title="Sua cidade, em movimento." subtitle="Visão geral da mobilidade • Santos/SP">
   <View style={styles.status}><View style={[styles.dot,apiEstado==="offline"&&{backgroundColor:theme.colors.danger},apiEstado==="verificando"&&{backgroundColor:theme.colors.warning}]}/><Text style={styles.statusText}>{apiEstado==="online"?"API CONECTADA":apiEstado==="offline"?"API INDISPONÍVEL":"VERIFICANDO API"}</Text></View><Text style={styles.foot}>PAINEL DE DEMONSTRAÇÃO · INDICADORES SIMULADOS</Text>
   <View style={styles.metrics}><View style={styles.metric}><Text style={styles.metricLabel}>FLUXO SIMULADO</Text><Text style={styles.metricValue}>1.284</Text><Text style={styles.muted}>veículos / hora*</Text></View><View style={styles.metric}><Text style={styles.metricLabel}>CRUZAMENTOS</Text><Text style={styles.metricValue}>03</Text><Text style={styles.muted}>pontos ilustrativos</Text></View></View>
@@ -167,7 +168,7 @@ export default function App(){
  if(iniciando)return <View style={styles.loading}><ActivityIndicator color={theme.colors.primary} size="large"/><Text style={styles.muted}>Preparando o Move Sync...</Text></View>;
  return <AuthContext.Provider value={{usuario:sessao?.usuario||null,encerrar,expirar}}><NavigationContainer theme={navTheme}><StatusBar style="light"/><Stack.Navigator screenOptions={{headerStyle:{backgroundColor:theme.colors.background},headerTintColor:theme.colors.text,headerTitleStyle:{fontWeight:"700"},contentStyle:{backgroundColor:theme.colors.background}}}>
  {sessao===null?<Stack.Screen name="Acesso" options={{headerShown:false}}>{()=><AuthScreen onAuth={s=>setSessao({token:s.token,usuario:{id:s.id,nome:s.nome,email:s.email}})}/>}</Stack.Screen>:<>
- <Stack.Screen name="Central" component={Central} options={{title:"Move Sync"}}/><Stack.Screen name="Mapa" component={MapScreen}/><Stack.Screen name="Cruzamentos" component={Cruzamentos}/><Stack.Screen name="Analises" component={Analises}/><Stack.Screen name="Ocorrencias" component={Ocorrencias}/><Stack.Screen name="DetalheOcorrencia" component={DetalheOcorrencia} options={{title:"Consultar ocorrência"}}/><Stack.Screen name="Perfil" component={Perfil}/><Stack.Screen name="Sobre" component={Sobre}/>
+ <Stack.Screen name="Central" component={Central} options={{title:"Move Sync"}}/><Stack.Screen name="Inteligencia" component={InteligenciaScreen} options={{title:"MoveSync AI"}}/><Stack.Screen name="Mapa" component={MapScreen}/><Stack.Screen name="Cruzamentos" component={Cruzamentos}/><Stack.Screen name="Analises" component={Analises}/><Stack.Screen name="Ocorrencias" component={Ocorrencias}/><Stack.Screen name="DetalheOcorrencia" component={DetalheOcorrencia} options={{title:"Consultar ocorrência"}}/><Stack.Screen name="Perfil" component={Perfil}/><Stack.Screen name="Sobre" component={Sobre}/>
  </>}
  </Stack.Navigator></NavigationContainer></AuthContext.Provider>;
 }

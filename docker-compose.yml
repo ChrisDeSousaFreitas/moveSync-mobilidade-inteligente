@@ -1,12 +1,13 @@
 services:
   banco:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     environment:
       POSTGRES_DB: movesync
       POSTGRES_USER: movesync
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-movesync-local}
     volumes:
       - dados-postgres:/var/lib/postgresql/data
+      - ./docker/pgvector-init.sql:/docker-entrypoint-initdb.d/pgvector.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U movesync -d movesync"]
       interval: 5s
@@ -24,7 +25,17 @@ services:
       DATABASE_USERNAME: movesync
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-movesync-local}
       JWT_SECRET: ${JWT_SECRET:-MoveSync-Local-Compose-Secret-Change-Before-Publishing}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-disabled}
+      APP_AI_ENABLED: ${APP_AI_ENABLED:-false}
+      APP_AI_RAG_ENABLED: ${APP_AI_RAG_ENABLED:-false}
     ports:
       - "8080:8080"
+  ml:
+    build: ./ml-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - dados-ml:/app/models
 volumes:
   dados-postgres:
+  dados-ml:
