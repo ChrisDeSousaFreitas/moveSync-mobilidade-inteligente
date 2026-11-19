@@ -36,7 +36,7 @@ A conta é criada na API no primeiro cadastro; ela não é pré-semeada no banco
 O aplicativo mantém uma cópia local das ocorrências com AsyncStorage, identificada por usuário. Quando a API está disponível, ela continua sendo a fonte principal dos dados e atualiza o cache local. Se a conexão falhar, a lista e os detalhes já armazenados podem ser consultados no aparelho.
 
 ## Vídeo de demonstração
-**Pendente:** inserir aqui o link público ou não listado do YouTube (até 3 minutos), após gravar o fluxo de login, lista, cadastro e consulta.
+[Assistir ao vídeo de demonstração do MoveSync no YouTube](https://youtube.com/shorts/K-mP8g3LGI0)
 
 ## Tecnologias
 React Native, Expo, TypeScript, React Navigation, Java 21, Spring Boot, Spring Security, Spring Data JPA, JWT, H2 e PostgreSQL.
@@ -88,7 +88,6 @@ npm run lint
 ```
 
 Copie `mobile/.env.example` para `mobile/.env` e ajuste `EXPO_PUBLIC_API_URL`. Em emulador Android, `10.0.2.2` aponta para o computador; no Expo Go em celular físico, use o IP local do computador. Para builds nativos com Google Maps, configure `EXPO_PUBLIC_MAPS_API_KEY` no ambiente antes de gerar o aplicativo.
-
 
 ## Documentação adicional
 - `docs/arquitetura.md`: organização dos módulos e segurança.
